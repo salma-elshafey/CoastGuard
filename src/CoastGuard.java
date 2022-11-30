@@ -76,22 +76,23 @@ public class CoastGuard {
         // M, N; C; cgX, cgY ;
         // I1X, I1Y, I2X, I2Y, ...IiX, IiY ;
         // S1X, S1Y, S1Passengers, S2X, S2Y, S2Passengers, ...SjX, SjY, SjPassengers;
-        int m = Integer.parseInt(splits[0].charAt(0)+"");
-        int n = Integer.parseInt(splits[0].charAt(2)+"");
-        int locX = Integer.parseInt(splits[2].charAt(0)+"");
-        int locY = Integer.parseInt(splits[2].charAt(2)+"");
+        // splits = ["m,n", "c", "cgX,cgY", "I1X,I1Y", "S1X,S1Y,S1Passengers"]
+        int m = Integer.parseInt(splits[0].split(",")[0]);
+        int n = Integer.parseInt(splits[0].split(",")[1]);
+        int locX = Integer.parseInt(splits[2].split(",")[0]);
+        int locY = Integer.parseInt(splits[2].split(",")[1]);
         Object[][] grid = new Object[m][n];
         // the agent
         Agent agent = new Agent(locX, locY, Integer.parseInt(splits[1]));
         // stations
         String[] stationsSplits = splits[3].split(",");
-        for (int i = 0; i < stationsSplits.length-1; i++){
+        for (int i = 0; i < stationsSplits.length-1; i+=2){
             locX = Integer.parseInt(""+stationsSplits[i]);
             locY = Integer.parseInt(""+stationsSplits[i+1]);
             grid[locX][locY] = new Station(locX, locY);
         }
         String[] shipSplits = splits[4].split(",");
-        for (int i = 0; i < shipSplits.length-2; i++){
+        for (int i = 0; i < shipSplits.length-2; i+=3){
             locX = Integer.parseInt(""+shipSplits[i]);
             locY = Integer.parseInt(""+shipSplits[i+1]);
             int passengers = Integer.parseInt(""+shipSplits[i+2]);
@@ -127,6 +128,7 @@ public class CoastGuard {
     }
 
     public static void main (String[] args){
-        System.out.println(GenGrid());
+        String grid0 = "5,6;50;0,1;0,4,3,3;1,1,90;";
+        System.out.println(solve(grid0, "BF", false));
     }
 }
