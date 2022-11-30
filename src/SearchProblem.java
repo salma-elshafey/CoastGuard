@@ -6,16 +6,6 @@ import java.util.Stack;
 public class SearchProblem {
     String[] operators;
     Object[][] initialState;
-    //int[][] stateSpace;
-    //int[][] goalStates;
-
-//    boolean goalTest(int[] state){
-//        for (int i = 0; i < goalStates.length; i++) {
-//            if (state == goalStates[i])
-//                return true;
-//        }
-//        return false;
-//    }
 
     boolean reachedGoal(ArrayList<Ship> ships, Agent agent) {
         // You reach your goal when:
