@@ -17,7 +17,7 @@ public class SearchProblem {
                     aShipIsNotWrecked = true;
                 }
                 // 2. there are no undamaged boxes which have not been retrieved
-                else if (((Ship) cell).blackBox.damage < 20) {
+                else if (((Ship) cell).blackBox.getDamage() < 20) {
                     aBlackBoxIsNotFullyDamaged = true;
                 }
             }
@@ -39,17 +39,7 @@ public class SearchProblem {
         int cols= root.cols;
         int expandedNodes = 0;
         q.add(root);
-        // ArrayList<Ship> ships = new ArrayList<Ship>();
-        // Agent agent = root.agent;
         int retrievedBlackBoxes = 0;
-//        for (int i = 0; i < root.state.length; i++) {
-//            for (int j = 0; j < root.state[0].length; j++) {
-//                if (root.state[i][j] != null) {
-//                    if (root.state[i][j] instanceof Ship)
-//                        ships.add((Ship) root.state[i][j]);
-//                }
-//            }
-//        }
         int unWreckedShips = 0; // at the beginning, number of un-wrecked ships is equal to the size of all ships
         for (Object cell : root.occupiedCells.values()) {
             if(cell instanceof Ship){
@@ -66,20 +56,19 @@ public class SearchProblem {
                 for (Object cell : curr.occupiedCells.values()) {
                     if(cell instanceof Ship) {
                         if (((Ship) cell).isWreck) // if it's a wreck, increase damage of blackbox
-                            ((Ship) cell).blackBox.damage++;
+                            ((Ship) cell).getBlackBox().setDamage(((Ship) cell).blackBox.getDamage()+1);
                         else { // if it's not, a passenger expires
                             ((Ship) cell).setNumOfPassengers(((Ship) cell).numOfPassengers - 1);
-                            unWreckedShips++; //?????????????????????
+                            unWreckedShips++;
                         }
                     }
                 }
             }
             System.out.println("Depth: " + curr.depth);
-            //   System.out.println("Curr agent location: "+curr.agent.locX +"," +curr.agent.locX);
+            //   System.out.println("Curr agent location: "+curr.agent.locX +"," +curr.agent.locY);
 
             int deaths = curr.deathsSoFar;
             expandedNodes++;
-            // Object[][] grid = curr.state;
             // check if curr is goal state
             if (reachedGoal(curr.occupiedCells, agent))
                 return new Object[]{curr, expandedNodes}; // <(Node) goalNode, (Integer) numbOfExpandedNodes>
@@ -98,9 +87,6 @@ public class SearchProblem {
                 // note: make sure of redundant states
                 String location = agent.locX + "," + agent.locY;
                 System.out.print(location);
-                for (String s : curr.occupiedCells.keySet()) {
-                    System.out.print("--ships&stations-->  " + s);
-                }
                 System.out.println("");
                 if (curr.occupiedCells.get(location) != null) {
                     System.out.println(curr.occupiedCells.get(location));
@@ -108,18 +94,17 @@ public class SearchProblem {
                         System.out.println("agent is in the cell of the ship");
                         Ship currShip = ((Ship) curr.occupiedCells.get(location)).clone();
                         if (currShip.isWreck) {
-                            if (!currShip.blackBox.isPickedUp) {
-                                if (currShip.blackBox.damage < 20) { // here the agent can retrieve the black box of the wreck
-                                    currShip.blackBox.isPickedUp = true;
-                                    retrievedBlackBoxes++;
-                                    HashMap<String, Object> OccupiedCellsClone = (HashMap<String, Object>) curr.occupiedCells.clone();
-                                    OccupiedCellsClone.put(location, currShip);
-                                    System.out.println("retrieve blackbox");
-                                    q.add(new Node(OccupiedCellsClone, agent, curr, curr.depth + 1, 0, curr.operator +
-                                            ",retrieve", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
-                                }
+                            if (!currShip.getBlackBox().isPickedUp() && currShip.getBlackBox().getDamage() < 20) { // here the agent can retrieve the black box of the wreck
+                                currShip.pickUpBlackBox();
+                                retrievedBlackBoxes++;
+                                HashMap<String, Object> OccupiedCellsClone = (HashMap<String, Object>) curr.occupiedCells.clone();
+                                OccupiedCellsClone.put(location, currShip);
+                                System.out.println("retrieve blackbox");
+                                q.add(new Node(OccupiedCellsClone, agent, curr, curr.depth + 1, 0, curr.operator +
+                                        ",retrieve", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                             }
-                        } else { // ship is not a wreck
+                        }
+                        else { // ship is not a wreck
                             if (currShip.numOfPassengers > 0) {
                                 if (agent.currAvailableSeats != 0) {
                                     // pick up passengers
@@ -132,7 +117,8 @@ public class SearchProblem {
                                         OccupiedCellsClone.put(location, currShip);
                                         q.add(new Node(OccupiedCellsClone, currAgent, curr, curr.depth + 1, 0, curr.operator +
                                                 ",pickup", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
-                                    } else { // agent picks up ALL passenger on the ship, and it becomes a wreck
+                                    }
+                                    else { // agent picks up ALL passenger on the ship, and it becomes a wreck
                                         agent.currAvailableSeats -= currShip.numOfPassengers;
                                         currShip.setNumOfPassengers(0);
                                         unWreckedShips--;
@@ -158,71 +144,40 @@ public class SearchProblem {
                     }
                 }
                 // enqueue nodes that contain "up" | "down" | "left" | "right" actions
-                String[] directions = (leaveCell(agent, rows, cols)).split(";");
-                for (int i = 0; i < directions.length; i++) {
-                    Agent currAgent = agent.clone();
-                    if (directions[i].equals("right")) {
-                        if (curr.parent != null) {
-                            String[] s = curr.parent.operator.split(",");
-                            System.out.println(s[s.length - 1]);
-                            if (!s[s.length - 1].equals("left")) {
-                                currAgent.locY += 1;
-                                q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
-                                        ",right", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
-                            }
-                        }
-                        else if (depth == 0) { // I'm at the root
-                            currAgent.locY += 1;
-                            q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
-                                    "right", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
-                        }
-                    } else if (directions[i].equals("left")) {
-                        if (curr.parent != null) {
-                            String[] s = curr.parent.operator.split(",");
-                            System.out.println(s[s.length - 1]);
-                            if (!s[s.length - 1].equals("right")) {
-                                currAgent.locY -= 1;
-                                q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
-                                        ",left", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
-                            }
-                        }
-                        else if (depth == 0) {
-                            currAgent.locY -= 1;
-                            q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
-                                    "left", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
-                        }
-                    }
-                    else if (directions[i].equals("up")) {
-                        if (curr.parent != null) {
-                            String[] s = curr.parent.operator.split(",");
-                            System.out.println(s[s.length - 1]);
-                            if (!s[s.length - 1].equals("down")) {
-                                currAgent.locX -= 1;
-                                q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
-                                        ",up", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
-                            }
-                        }
-                        else if (depth == 0) {
-                            currAgent.locY -= 1;
-                            q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
-                                    "up", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
-                        }
-                    } else if (directions[i].equals("down")) {
-                        if (curr.parent != null) {
-                            String[] s = curr.parent.operator.split(",");
-                            System.out.println(s[s.length - 1]);
-                            if (!s[s.length - 1].equals("up")) {
-                                currAgent.locX += 1;
-                                q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
-                                        ",down", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
-                            }
-                        }
-                        else if (depth == 0) {
-                            currAgent.locX += 1;
-                            q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
-                                    "down", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
-                        }
-                    }
+                String latestAction = "";
+                if (curr.parent != null) {
+                    String[] s = curr.operator.split(",");
+                    latestAction = s[s.length-1];
+                    System.out.println("Latest action: " + latestAction);
+                }
+                // String[] directions = (leaveCell(agent, rows, cols, latestAction)).split(";");
+                boolean[] directions = leaveCell(agent, rows, cols, latestAction);
+                // direction: 0: up, 1: down, 2: left, 3: right
+                System.out.println("Up: " + directions[0] + ", Down: " + directions[1] + ", Left: " + directions[2] + ", Right: " + directions[3]);
+                Agent currAgent;
+                if (directions[0]) { // up
+                    currAgent = agent.clone();
+                    currAgent.locX -= 1;
+                    q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                            ",up", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
+                }
+                if (directions[1]) { // down
+                    currAgent = agent.clone();
+                    currAgent.locX += 1;
+                    q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                            ",down", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
+                }
+                if (directions[2]) { // left
+                    currAgent = agent.clone();
+                    currAgent.locY -= 1;
+                    q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                            ",left", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
+                }
+                if (directions[3]) { // right
+                    currAgent = agent.clone();
+                    currAgent.locY += 1;
+                    q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                            ",right", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                 }
             }
 
@@ -403,28 +358,72 @@ public class SearchProblem {
 //    }
 
 
-    String leaveCell(Agent agent, int rows, int columns){
-        String availableActions = "";
+    boolean[] leaveCell(Agent agent, int rows, int columns, String latestAction){
+        boolean[] directions = new boolean[4]; // up, down, left, right
         if (agent.locY == 0) { // left of the grid
             if (agent.locX == 0) // left upper corner -> can't go left or up
-                return "right;down";
+            {
+                directions[1] = true; // down
+                directions[3] = true; // right
+            }
             else if (agent.locX == rows - 1) // left lower corner -> can't go left or down
-                return "right;up";
+            {
+                directions[0] = true; // up
+                directions[3] = true; // right
+            }
             else // agent can't go left only
-                return "right;down;up";
+            {
+                directions[0] = true; // up
+                directions[1] = true; // down
+                directions[3] = true; // right
+            }
         }
-        if (agent.locY == columns - 1) { // right of the grid
+        else if (agent.locY == columns - 1) { // right of the grid
             if (agent.locX == 0) // right upper corner -> can't go right or up
-                return "left;down";
+            {
+                directions[2] = true; // left
+                directions[1] = true; // down
+            }
             else if (agent.locX == rows - 1) // right lower corner -> can't go right or down
-                return "left;up";
+            {
+                directions[0] = true; // up
+                directions[2] = true; // left
+            }
             else // agent can't go right only
-                return "left;down;up";
+            {
+                directions[0] = true; // up
+                directions[1] = true; // down
+                directions[2] = true; // left
+            }
         }
-        if (agent.locX == 0) // can't go up
-            return "left;right;down";
-        if (agent.locX == rows - 1) // can't go down
-            return "left;right;up";
-        return "left;right;down;up";
+        else if (agent.locX == 0) // can't go up
+        {
+            directions[1] = true; // down
+            directions[2] = true; // left
+            directions[3] = true; // right
+        }
+        else if (agent.locX == rows - 1) // can't go down
+        {
+            directions[0] = true; // up
+            directions[2] = true; // left
+            directions[3] = true; // right
+        }
+        else
+        {
+            directions[0] = true; // up
+            directions[1] = true; // down
+            directions[2] = true; // left
+            directions[3] = true; // right
+        }
+        // if the previous actions was in the opposite direction, don't go
+        if (latestAction.equals("down"))
+            directions[0] = false; // up
+        else if (latestAction.equals("up"))
+            directions[1] = false; // down
+        else if (latestAction.equals("right"))
+            directions[2] = false; // left
+        else if (latestAction.equals("left"))
+            directions[3] = false; // right
+        return directions;
     }
 }
