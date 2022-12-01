@@ -134,7 +134,7 @@ public class CoastGuard {
 //                return solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
 //            }
 //        }
-        return s.substring(1);
+        return s;
         //return s;
 
     }
