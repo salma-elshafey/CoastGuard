@@ -87,13 +87,13 @@ public class CoastGuard {
         Agent agent = new Agent(locX, locY, Integer.parseInt(splits[1]));
         // stations
         // OccupiedCells= cells occupied by stations and cells
-        HashMap<int[], Object> OccupiedCells = new HashMap<int[], Object>();
+        HashMap<String, Object> OccupiedCells = new HashMap<String, Object>();
 
         String[] stationsSplits = splits[3].split(",");
         for (int i = 0; i < stationsSplits.length-1; i+=2){
             locX = Integer.parseInt(""+stationsSplits[i]);
             locY = Integer.parseInt(""+stationsSplits[i+1]);
-            int[] location={locX,locY};
+            String location = locX + "," + locY;
             //grid[locX][locY] = new Station(locX, locY);
             OccupiedCells.put(location,"Station");
 
@@ -104,8 +104,8 @@ public class CoastGuard {
             locY = Integer.parseInt(""+shipSplits[i+1]);
             int passengers = Integer.parseInt(""+shipSplits[i+2]);
             System.out.println(passengers);
-            int[] location={locX,locY};
-           // grid[locX][locY] = new Ship(locX, locY, passengers);
+            String location = locX + "," + locY;
+            // grid[locX][locY] = new Ship(locX, locY, passengers);
             OccupiedCells.put(location,new Ship(locX, locY, passengers));
         }
         SearchProblem solver = new SearchProblem();
@@ -134,12 +134,15 @@ public class CoastGuard {
 //                return solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
 //            }
 //        }
-        return s;
+        return s.substring(1);
+        //return s;
+
     }
 
     public static void main (String[] args){
         String grid0 = "5,6;50;0,1;0,4,3,3;1,1,90;";
-        System.out.println(solve(grid0, "BF", false));
+        String grid2 = "2,2;50;0,1;1,0;1,1,90";
+        System.out.println(solve(grid2, "BF", false));
 //        HashMap<int[], Object> test = new HashMap<int[], Object>();
 //        int[] location={0,0};
 //        test.put(location,new Ship(0, 0, 20));

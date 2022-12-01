@@ -8,7 +8,7 @@ public class Node {
     // 4. The depth of the node in the tree
     // 5. The path cost from the root
     //Object[][] state;
-    HashMap<int[], Object> occupiedCells;
+    HashMap<String, Object> occupiedCells;
     int retrievedBoxes; // part of state
     int deathsSoFar; // part of state
     Node parent;
@@ -19,7 +19,7 @@ public class Node {
     int rows;
     int cols;
     //int heuristic;
-    public Node(HashMap<int[], Object> OccupiedCells, Agent agent, Node parent, int depth, int pathCost, String operator, int retrievedBoxes, int deathsSoFar, int rows, int cols){
+    public Node(HashMap<String, Object> OccupiedCells, Agent agent, Node parent, int depth, int pathCost, String operator, int retrievedBoxes, int deathsSoFar, int rows, int cols){
         // State is on the form <agent X location, agent Y location>
         this.occupiedCells = OccupiedCells;
         this.agent = agent;
@@ -32,7 +32,7 @@ public class Node {
         this.rows=rows;
         this.cols=cols;
     }
-    public Node(HashMap<int[], Object> OccupiedCells, Agent agent, Node parent, int depth, int pathCost, String operator, int retrievedBoxes, int deathsSoFar){
+    public Node(HashMap<String, Object> OccupiedCells, Agent agent, Node parent, int depth, int pathCost, String operator, int retrievedBoxes, int deathsSoFar){
         // State is on the form <agent X location, agent Y location>
         this.occupiedCells = OccupiedCells;
         this.agent = agent;

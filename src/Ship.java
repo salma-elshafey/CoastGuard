@@ -1,5 +1,13 @@
 public class Ship implements Cloneable{
     boolean isWreck;
+
+    public void setNumOfPassengers(int numOfPassengers) {
+        this.numOfPassengers = numOfPassengers;
+        if (this.numOfPassengers <= 0) {
+            this.isWreck = true;
+        }
+    }
+
     int numOfPassengers;
     int locX;
     int locY;
@@ -39,5 +47,9 @@ public class Ship implements Cloneable{
         ship.isWreck = this.isWreck;
         ship.blackBox = this.blackBox;
         return ship;
+    }
+
+    public String toString() {
+        return "Ship: numOfPassengers: " + numOfPassengers + ", isWreck: " + isWreck + ", BlackBox Damage: " + blackBox.damage;
     }
 }
