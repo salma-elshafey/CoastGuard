@@ -1,3 +1,4 @@
+import java.util.HashMap;
 public class CoastGuard {
 
     public static String GenGrid(){
@@ -81,54 +82,74 @@ public class CoastGuard {
         int n = Integer.parseInt(splits[0].split(",")[1]);
         int locX = Integer.parseInt(splits[2].split(",")[0]);
         int locY = Integer.parseInt(splits[2].split(",")[1]);
-        Object[][] grid = new Object[m][n];
+        //Object[][] grid = new Object[m][n];
         // the agent
         Agent agent = new Agent(locX, locY, Integer.parseInt(splits[1]));
         // stations
+        // OccupiedCells= cells occupied by stations and cells
+        HashMap<int[], Object> OccupiedCells = new HashMap<int[], Object>();
+
         String[] stationsSplits = splits[3].split(",");
         for (int i = 0; i < stationsSplits.length-1; i+=2){
             locX = Integer.parseInt(""+stationsSplits[i]);
             locY = Integer.parseInt(""+stationsSplits[i+1]);
-            grid[locX][locY] = new Station(locX, locY);
+            int[] location={locX,locY};
+            //grid[locX][locY] = new Station(locX, locY);
+            OccupiedCells.put(location,"Station");
+
         }
         String[] shipSplits = splits[4].split(",");
         for (int i = 0; i < shipSplits.length-2; i+=3){
             locX = Integer.parseInt(""+shipSplits[i]);
             locY = Integer.parseInt(""+shipSplits[i+1]);
             int passengers = Integer.parseInt(""+shipSplits[i+2]);
-            grid[locX][locY] = new Ship(locX, locY, passengers);
+            System.out.println(passengers);
+            int[] location={locX,locY};
+           // grid[locX][locY] = new Ship(locX, locY, passengers);
+            OccupiedCells.put(location,new Ship(locX, locY, passengers));
         }
         SearchProblem solver = new SearchProblem();
         // Breadth-first Search
         if (strategy.equals("BF")) {
-            Node root = new Node(grid, agent, null, 0, 0, "", 0, 0);
+            Node root = new Node(OccupiedCells, agent, null, 0, 0, "", 0, 0, m, n);
             Object[] sol = solver.bfs(root);
             Node solution = (Node) sol[0];
             int expandedNodes = (Integer) sol[1];
             if (solution == null)
-                return ""; // ?
+                s= "no sol"; // ?
             else {
-                return solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+                s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
             }
         }
 
         // Depth-first Search
-        if (strategy.equals(("DF"))) {
-            Node root = new Node(grid, agent, null, 0, 0, "", 0, 0);
-            Object[] sol = solver.dfs(root);
-            Node solution = (Node) sol[0];
-            int expandedNodes = (Integer) sol[1];
-            if (solution == null)
-                return ""; // ?
-            else {
-                return solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
-            }
-        }
+//        if (strategy.equals(("DF"))) {
+//            Node root = new Node(OccupiedCells, agent, null, 0, 0, "", 0, 0, m, n);
+//            Object[] sol = solver.dfs(root);
+//            Node solution = (Node) sol[0];
+//            int expandedNodes = (Integer) sol[1];
+//            if (solution == null)
+//                return ""; // ?
+//            else {
+//                return solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+//            }
+//        }
         return s;
     }
 
     public static void main (String[] args){
         String grid0 = "5,6;50;0,1;0,4,3,3;1,1,90;";
         System.out.println(solve(grid0, "BF", false));
+//        HashMap<int[], Object> test = new HashMap<int[], Object>();
+//        int[] location={0,0};
+//        test.put(location,new Ship(0, 0, 20));
+//        int[] location2={3,4};
+//        test.put(location2,"station");
+//        System.out.println(test.get(location2) instanceof Ship );
+
+        // if key is not present in hashmap it returns null
+
+
+
     }
 }
