@@ -55,7 +55,7 @@ public class Ship implements Cloneable{
     }
 
     public String toString() {
-        return "Ship: numOfPassengers: " + numOfPassengers + ", isWreck: " + isWreck + ", BlackBox Damage: " + blackBox.damage;
+        return "Ship: numOfPassengers: " + numOfPassengers + ", isWreck: " + isWreck + ", BlackBox Damage: " + blackBox.damage + ", BlackBox is Picked Up: " + blackBox.isPickedUp();
     }
 
     public void pickUpBlackBox() {

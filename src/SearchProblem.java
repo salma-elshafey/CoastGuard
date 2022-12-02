@@ -9,7 +9,7 @@ public class SearchProblem {
         // You reach your goal when:
         boolean aShipIsNotWrecked = false;
         boolean aBlackBoxIsNotFullyDamaged = false;
-        System.out.println(occupiedCells.toString() + " Boat: " + agent.locX + "," + agent.locY);
+        // System.out.println(occupiedCells.toString() + " Boat: " + agent.locX + "," + agent.locY);
         for (Object cell : occupiedCells.values()) {
             if(cell instanceof Ship) {
                 // 1.  there are no living passengers who are not rescued
@@ -17,7 +17,7 @@ public class SearchProblem {
                     aShipIsNotWrecked = true;
                 }
                 // 2. there are no undamaged boxes which have not been retrieved
-                else if (((Ship) cell).blackBox.getDamage() < 20) {
+                else if (((Ship) cell).getBlackBox().getDamage() < 20 && !(((Ship) cell).getBlackBox().isPickedUp())) {
                     aBlackBoxIsNotFullyDamaged = true;
                 }
             }
@@ -35,45 +35,39 @@ public class SearchProblem {
     // Breadth-first Search
     Object[] bfs(Node root) { // root is initial state
         Queue<Node> q = new LinkedList<Node>();
-        int rows=root.rows;
+        int rows = root.rows;
         int cols= root.cols;
         int expandedNodes = 0;
         q.add(root);
         int retrievedBlackBoxes = 0;
-        int unWreckedShips = 0; // at the beginning, number of un-wrecked ships is equal to the size of all ships
-        for (Object cell : root.occupiedCells.values()) {
-            if(cell instanceof Ship){
-                unWreckedShips++;
-            }
-        }
+        int unWreckedShips = 0; // at the beginning, number of un-wrecked ships will be equal to the size of all ships
         int depth = root.depth; // 0
+        HashMap<String, Object> occupiedCells = root.occupiedCells;
         while (!q.isEmpty()) {
             Node curr = q.poll();
             Agent agent = curr.agent;
             if (curr.depth == depth + 1){
                 depth++;
+                occupiedCells = curr.occupiedCells;
                 unWreckedShips = 0;
-                for (Object cell : curr.occupiedCells.values()) {
-                    if(cell instanceof Ship) {
-                        if (((Ship) cell).isWreck) // if it's a wreck, increase damage of blackbox
-                            ((Ship) cell).getBlackBox().setDamage(((Ship) cell).blackBox.getDamage()+1);
+                for (String key : occupiedCells.keySet()) {
+                    if (occupiedCells.get(key) instanceof Ship) {
+                        if (((Ship) occupiedCells.get(key)).isWreck) // if it's a wreck, increase damage of blackbox
+                            ((Ship) occupiedCells.get(key)).getBlackBox().setDamage(((Ship) occupiedCells.get(key)).getBlackBox().getDamage()+1);
                         else { // if it's not, a passenger expires
-                            ((Ship) cell).setNumOfPassengers(((Ship) cell).numOfPassengers - 1);
+                            ((Ship) occupiedCells.get(key)).setNumOfPassengers(((Ship) occupiedCells.get(key)).numOfPassengers - 1);
                             unWreckedShips++;
                         }
                     }
                 }
             }
             System.out.println("Depth: " + curr.depth);
-            //   System.out.println("Curr agent location: "+curr.agent.locX +"," +curr.agent.locY);
-
-            int deaths = curr.deathsSoFar;
             expandedNodes++;
             // check if curr is goal state
             if (reachedGoal(curr.occupiedCells, agent))
                 return new Object[]{curr, expandedNodes}; // <(Node) goalNode, (Integer) numbOfExpandedNodes>
 
-                // first check if the cell that the agent is in contains a ship ~
+            // first check if the cell that the agent is in contains a ship ~
                 // check if it's a wreck, if it is a wreck ~
                 // check if there is an undamaged black box -> pick up if yes ~
                 // else if it's not a wreck & has passengers, check if the agent has available seats ~
@@ -86,22 +80,23 @@ public class SearchProblem {
             else {
                 // note: make sure of redundant states
                 String location = agent.locX + "," + agent.locY;
-                System.out.print(location);
-                System.out.println("");
                 if (curr.occupiedCells.get(location) != null) {
-                    System.out.println(curr.occupiedCells.get(location));
+                    System.out.println(curr.occupiedCells.get(location) + ", Boat: " + location + ", Boat Available Seats: " + agent.currAvailableSeats);
                     if (curr.occupiedCells.get(location) instanceof Ship) {
                         System.out.println("agent is in the cell of the ship");
                         Ship currShip = ((Ship) curr.occupiedCells.get(location)).clone();
                         if (currShip.isWreck) {
-                            if (!currShip.getBlackBox().isPickedUp() && currShip.getBlackBox().getDamage() < 20) { // here the agent can retrieve the black box of the wreck
+                            System.out.println("SHIP IS A WRECK");
+                            if (!(currShip.getBlackBox().isPickedUp()) && currShip.getBlackBox().getDamage() < 20) { // here the agent can retrieve the black box of the wreck
+                                System.out.println(currShip);
+                                System.out.println("AND I'LL RETRIEVE THE BLACK BOX");
                                 currShip.pickUpBlackBox();
-                                retrievedBlackBoxes++;
-                                HashMap<String, Object> OccupiedCellsClone = (HashMap<String, Object>) curr.occupiedCells.clone();
-                                OccupiedCellsClone.put(location, currShip);
+                                System.out.println(currShip);
+                                HashMap<String, Object> occupiedCellsClone = (HashMap<String, Object>) occupiedCells.clone();
+                                occupiedCellsClone.put(location, currShip);
                                 System.out.println("retrieve blackbox");
-                                q.add(new Node(OccupiedCellsClone, agent, curr, curr.depth + 1, 0, curr.operator +
-                                        ",retrieve", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
+                                q.add(new Node(occupiedCellsClone, agent, curr, curr.depth + 1, 0, curr.operator +
+                                        ",retrieve", retrievedBlackBoxes + 1, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                             }
                         }
                         else { // ship is not a wreck
@@ -109,7 +104,7 @@ public class SearchProblem {
                                 if (agent.currAvailableSeats != 0) {
                                     // pick up passengers
                                     System.out.println("pickup");
-                                    if (agent.currAvailableSeats < currShip.numOfPassengers) { // agent picks SOME of the passengers on the ship
+                                    if (agent.currAvailableSeats <= currShip.numOfPassengers) { // agent picks SOME of the passengers on the ship
                                         currShip.setNumOfPassengers(currShip.numOfPassengers - agent.currAvailableSeats);
                                         Agent currAgent = agent.clone();
                                         currAgent.currAvailableSeats = 0;
@@ -119,26 +114,26 @@ public class SearchProblem {
                                                 ",pickup", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                                     }
                                     else { // agent picks up ALL passenger on the ship, and it becomes a wreck
-                                        agent.currAvailableSeats -= currShip.numOfPassengers;
+                                        Agent currAgent = agent.clone();
+                                        currAgent.currAvailableSeats -= currShip.numOfPassengers;
                                         currShip.setNumOfPassengers(0);
                                         unWreckedShips--;
-                                        HashMap<String, Object> OccupiedCellsClone = (HashMap<String, Object>) curr.occupiedCells.clone();
-                                        OccupiedCellsClone.put(location, currShip);
-                                        q.add(new Node(OccupiedCellsClone, agent, curr, curr.depth + 1, 0, curr.operator +
+                                        HashMap<String, Object> occupiedCellsClone = (HashMap<String, Object>) occupiedCells.clone();
+                                        occupiedCellsClone.put(location, currShip);
+                                        q.add(new Node(occupiedCellsClone, currAgent, curr, curr.depth + 1, 0, curr.operator +
                                                 ",pickup", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                                     }
                                 }
                             }
                         }
                     } else if (curr.occupiedCells.get(location).equals("Station")) {
-                        // Station currStation = (Station) grid[agent.locX][agent.locY];
                         System.out.println("BOAT IS IN STATION");
                         if (agent.currAvailableSeats != agent.capacity) { // boat is not empty
                             System.out.println("drop-off");
                             // drop off all passengers at station
                             Agent currAgent = agent.clone();
                             currAgent.currAvailableSeats = agent.capacity;
-                            q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                            q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
                                     ",drop", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                         }
                     }
@@ -153,53 +148,33 @@ public class SearchProblem {
                 // String[] directions = (leaveCell(agent, rows, cols, latestAction)).split(";");
                 boolean[] directions = leaveCell(agent, rows, cols, latestAction);
                 // direction: 0: up, 1: down, 2: left, 3: right
-                System.out.println("Up: " + directions[0] + ", Down: " + directions[1] + ", Left: " + directions[2] + ", Right: " + directions[3]);
+                // System.out.println("Up: " + directions[0] + ", Down: " + directions[1] + ", Left: " + directions[2] + ", Right: " + directions[3]);
                 Agent currAgent;
                 if (directions[0]) { // up
                     currAgent = agent.clone();
                     currAgent.locX -= 1;
-                    q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                    q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
                             ",up", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                 }
                 if (directions[1]) { // down
                     currAgent = agent.clone();
                     currAgent.locX += 1;
-                    q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                    q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
                             ",down", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                 }
                 if (directions[2]) { // left
                     currAgent = agent.clone();
                     currAgent.locY -= 1;
-                    q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                    q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
                             ",left", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                 }
                 if (directions[3]) { // right
                     currAgent = agent.clone();
                     currAgent.locY += 1;
-                    q.add(new Node(curr.occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                    q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
                             ",right", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                 }
             }
-
-            // update all numbers of passengers ships on the grid according to the game rule 1 death on each ship per 1 time step (action)
-            // and the blackbox damage
-
-//            for (int i = 0; i < curr.state.length; i++) {
-//                for (int j = 0; j < curr.state[0].length; j++) {
-//                    if (curr.state[i][j] != null) {
-//                        if (curr.state[i][j] instanceof Ship) {
-//                            if (((Ship) curr.state[i][j]).isWreck) // if it's a wreck, increase damage of blackbox
-//                                ((Ship) curr.state[i][j]).blackBox.damage++;
-//                            else { // if it's not, a passenger expires
-//                                ((Ship) curr.state[i][j]).numOfPassengers--;
-//                                unWreckedShips++;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-
-
 
 //            System.out.print("-que start:   ");
 //            for (int i = 0; i < q.size(); i++) {
