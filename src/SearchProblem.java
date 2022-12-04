@@ -31,6 +31,12 @@ public class SearchProblem {
         }
         return false;
     }
+    void AS1(Node root){
+        Comparator<Node> heuristicorter = Comparator.comparing(Node::getHeuristic1);
+        PriorityQueue<Node> priorityQueue = new PriorityQueue<>( heuristicorter );
+
+
+    }
 
     // Breadth-first Search
     Object[] bfs(Node root) { // root is initial state

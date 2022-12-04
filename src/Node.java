@@ -1,6 +1,14 @@
 import java.util.HashMap;
 
 public class Node {
+    public int getHeuristic1() {
+        return heuristic1;
+    }
+
+    public int getHeuristic2() {
+        return heuristic2;
+    }
+
     // Nodes are 5-tuples
     // 1. The state of the state space that this node corresponds to
     // 2. The parent node
@@ -62,7 +70,7 @@ public class Node {
         return num;
     }
     public int distance_to_theNearestShip() { // to calculate the distance from me to the nearest ship
-        int smallest_distance = 0;
+        int smallest_distance = rows*cols ;
         int dis=0;
         int small=0;
         int lostPassengers_inTheFuture=0; // used for the second heuristic function
@@ -71,7 +79,7 @@ public class Node {
             if (cell instanceof Ship) {
 
                 if (!(((Ship) cell).isWreck)) {
-                    dis+= ((Ship) cell).locX-agent.locX + ((Ship) cell).locY-agent.locY;
+                    dis = ((Ship) cell).locX-agent.locX + ((Ship) cell).locY-agent.locY;
                     dis = Math.abs(dis);
 
                     if(dis<((Ship) cell).numOfPassengers){  // as maybe the number of passenger remaining in the nearst ship is less that the step
@@ -94,7 +102,7 @@ public class Node {
             }
         }
         heuristic2 = lostPassengers_inTheFuture;
-        return smallest_distance;
+        return (smallest_distance==cols*rows)?0:smallest_distance;
     }
 
 }
