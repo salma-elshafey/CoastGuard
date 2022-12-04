@@ -111,7 +111,7 @@ public class CoastGuard {
         SearchProblem solver = new SearchProblem();
         // Breadth-first Search
         if (strategy.equals("BF")) {
-            Node root = new Node(OccupiedCells, agent, null, 0, 0, "", 0, 0, m, n);
+            Node root = new Node(OccupiedCells, agent, null, 0, "", "", 0, 0, m, n);
             Object[] sol = solver.bfs(root);
             Node solution = (Node) sol[0];
             int expandedNodes = (Integer) sol[1];

@@ -95,7 +95,7 @@ public class SearchProblem {
                                 HashMap<String, Object> occupiedCellsClone = (HashMap<String, Object>) occupiedCells.clone();
                                 occupiedCellsClone.put(location, currShip);
                                 System.out.println("retrieve blackbox");
-                                q.add(new Node(occupiedCellsClone, agent, curr, curr.depth + 1, 0, curr.operator +
+                                q.add(new Node(occupiedCellsClone, agent, curr, curr.depth + 1, "", curr.operator +
                                         ",retrieve", retrievedBlackBoxes + 1, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                             }
                         }
@@ -110,7 +110,7 @@ public class SearchProblem {
                                         currAgent.currAvailableSeats = 0;
                                         HashMap<String, Object> OccupiedCellsClone = (HashMap<String, Object>) curr.occupiedCells.clone();
                                         OccupiedCellsClone.put(location, currShip);
-                                        q.add(new Node(OccupiedCellsClone, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                                        q.add(new Node(OccupiedCellsClone, currAgent, curr, curr.depth + 1, "", curr.operator +
                                                 ",pickup", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                                     }
                                     else { // agent picks up ALL passenger on the ship, and it becomes a wreck
@@ -120,7 +120,7 @@ public class SearchProblem {
                                         unWreckedShips--;
                                         HashMap<String, Object> occupiedCellsClone = (HashMap<String, Object>) occupiedCells.clone();
                                         occupiedCellsClone.put(location, currShip);
-                                        q.add(new Node(occupiedCellsClone, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                                        q.add(new Node(occupiedCellsClone, currAgent, curr, curr.depth + 1, "", curr.operator +
                                                 ",pickup", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                                     }
                                 }
@@ -133,7 +133,7 @@ public class SearchProblem {
                             // drop off all passengers at station
                             Agent currAgent = agent.clone();
                             currAgent.currAvailableSeats = agent.capacity;
-                            q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                            q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, "", curr.operator +
                                     ",drop", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                         }
                     }
@@ -153,25 +153,25 @@ public class SearchProblem {
                 if (directions[0]) { // up
                     currAgent = agent.clone();
                     currAgent.locX -= 1;
-                    q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                    q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, "", curr.operator +
                             ",up", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                 }
                 if (directions[1]) { // down
                     currAgent = agent.clone();
                     currAgent.locX += 1;
-                    q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                    q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, "", curr.operator +
                             ",down", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                 }
                 if (directions[2]) { // left
                     currAgent = agent.clone();
                     currAgent.locY -= 1;
-                    q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                    q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, "", curr.operator +
                             ",left", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                 }
                 if (directions[3]) { // right
                     currAgent = agent.clone();
                     currAgent.locY += 1;
-                    q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, 0, curr.operator +
+                    q.add(new Node(occupiedCells, currAgent, curr, curr.depth + 1, "", curr.operator +
                             ",right", retrievedBlackBoxes, unWreckedShips > 0 ? curr.deathsSoFar + unWreckedShips : curr.deathsSoFar));
                 }
             }
