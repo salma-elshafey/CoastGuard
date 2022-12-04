@@ -34,7 +34,7 @@ public class SearchProblem {
     void AS1(Node root){
         Comparator<Node> heuristicOrder = Comparator.comparing(Node::getHeuristic_cost1);
         PriorityQueue<Node> priorityQueue = new PriorityQueue<>( heuristicOrder );
-
+// nouran
 
     }
 
