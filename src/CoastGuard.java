@@ -1,3 +1,5 @@
+import java.sql.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 public class CoastGuard {
 
@@ -140,9 +142,10 @@ public class CoastGuard {
     }
 
     public static void main (String[] args){
-        String grid0 = "5,6;50;0,1;0,4,3,3;1,1,90;";
-        String grid2 = "2,2;50;0,1;1,0;1,1,90";
-        System.out.println(solve(grid2, "BF", false));
+//        String grid0 = "5,6;50;0,1;0,4,3,3;1,1,90;";
+//        String grid2 = "2,2;50;0,1;1,0;1,1,90";
+//        System.out.println(solve(grid2, "BF", false));
+
 //        HashMap<int[], Object> test = new HashMap<int[], Object>();
 //        int[] location={0,0};
 //        test.put(location,new Ship(0, 0, 20));
@@ -151,6 +154,13 @@ public class CoastGuard {
 //        System.out.println(test.get(location2) instanceof Ship );
 
         // if key is not present in hashmap it returns null
+
+        String []s = "1,2".split(",");
+        int [] d = new int[]{1,2,3};
+        System.out.println(Arrays.toString(d) );
+        System.out.println(s.toString() );
+
+        System.out.println("1,2".compareTo("1,4") );
 
 
 

@@ -8,6 +8,17 @@ public class Node {
     public int getHeuristic2() {
         return heuristic2;
     }
+    public String getHeuristic_cost1() {
+        String[] cost =pathCost.split(",");
+        cost[0] = String.valueOf(Integer.parseInt(cost[0])+heuristic1);
+        return cost[0]+","+cost[1];
+    }
+    public String getHeuristic_cost2() {
+        String[] cost =pathCost.split(",");
+        cost[0] = String.valueOf(Integer.parseInt(cost[0])+heuristic2);
+        return cost[0]+","+cost[1];
+
+    }
 
     // Nodes are 5-tuples
     // 1. The state of the state space that this node corresponds to

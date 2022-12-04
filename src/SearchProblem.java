@@ -32,8 +32,8 @@ public class SearchProblem {
         return false;
     }
     void AS1(Node root){
-        Comparator<Node> heuristicorter = Comparator.comparing(Node::getHeuristic1);
-        PriorityQueue<Node> priorityQueue = new PriorityQueue<>( heuristicorter );
+        Comparator<Node> heuristicOrder = Comparator.comparing(Node::getHeuristic_cost1);
+        PriorityQueue<Node> priorityQueue = new PriorityQueue<>( heuristicOrder );
 
 
     }
