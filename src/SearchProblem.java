@@ -18,7 +18,7 @@ public class SearchProblem {
                 }
                 // 2. there are no undamaged boxes which have not been retrieved
               //  else if (((Ship) cell).getBlackBox().getDamage() < 100 && !(((Ship) cell).getBlackBox().isPickedUp())) {
-                else if (!((Ship) cell).getBlackBox().isRetrievable()) {
+                else if (((Ship) cell).getBlackBox().isRetrievable()) {
                     aBlackBoxIsNotFullyDamaged = true;
                 }
             }

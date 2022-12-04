@@ -1,4 +1,6 @@
 public class Ship implements Cloneable{
+    // let's say it'll be a string
+    // "locX,locY,numOfPassengers,blackBoxDamage"
     boolean isWreck;
 
     public void setNumOfPassengers(int numOfPassengers) {
