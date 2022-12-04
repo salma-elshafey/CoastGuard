@@ -51,11 +51,12 @@ public class Ship implements Cloneable{
         Ship ship = new Ship(this.locX, this.locY, this.numOfPassengers);
         ship.isWreck = this.isWreck;
         ship.setBlackBox(new BlackBox(this.blackBox.getDamage(), this.blackBox.isPickedUp()));
+        ship.getBlackBox().isRetrievable = this.getBlackBox().isRetrievable();
         return ship;
     }
 
     public String toString() {
-        return "Ship: numOfPassengers: " + numOfPassengers + ", isWreck: " + isWreck + ", BlackBox Damage: " + blackBox.damage + ", BlackBox is Picked Up: " + blackBox.isPickedUp();
+        return "Ship: numOfPassengers: " + numOfPassengers + ", isWreck: " + isWreck + ", BlackBox Damage: " + blackBox.damage + ", BlackBox is Retrievable: " + blackBox.isRetrievable();
     }
 
     public void pickUpBlackBox() {

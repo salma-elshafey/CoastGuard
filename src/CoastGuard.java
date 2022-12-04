@@ -141,7 +141,7 @@ public class CoastGuard {
 
     public static void main (String[] args){
         String grid0 = "5,6;50;0,1;0,4,3,3;1,1,90;";
-        String grid2 = "2,2;50;0,1;1,0;1,1,90";
+        String grid2 = "2,2;50;0,1;1,0;1,1,40";
         System.out.println(solve(grid2, "BF", false));
 //        HashMap<int[], Object> test = new HashMap<int[], Object>();
 //        int[] location={0,0};
