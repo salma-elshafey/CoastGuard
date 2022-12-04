@@ -2,8 +2,6 @@ import java.util.*;
 import java.util.HashMap;
 
 public class SearchProblem {
-    String[] operators;
-    Object[][] initialState;
 
     boolean reachedGoal(HashMap<String, Object> occupiedCells, Agent agent) {
         // You reach your goal when:
@@ -89,10 +87,10 @@ public class SearchProblem {
                         Ship currShip = ((Ship) curr.occupiedCells.occupiedCells.get(location)).clone();
                         if (currShip.isWreck) {
                             if (currShip.getBlackBox().isRetrievable) { // here the agent can retrieve the black box of the wreck
-                                Ship currShip2 = currShip.clone();
-                                currShip2.pickUpBlackBox();
+                                //Ship currShip2 = currShip.clone();
+                                currShip.pickUpBlackBox();
                                 HashMap<String, Object> occupiedCellsClone = curr.occupiedCells.clone();
-                                occupiedCellsClone.put(location, currShip2);
+                                occupiedCellsClone.put(location, currShip);
                                 q.add(new Node(occupiedCellsClone, agent, curr, curr.depth + 1, 0, curr.operator +
                                         ",retrieve", retrievedBlackBoxes + 1, curr.deathsSoFar + unWreckedShips));
                             }

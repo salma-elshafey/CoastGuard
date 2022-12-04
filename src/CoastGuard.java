@@ -139,21 +139,79 @@ public class CoastGuard {
 
     }
 
+    public static String solve2(String gr, String strategy, boolean visualize) {
+        String s = "";
+
+        // recreate grid
+        String[] splits = gr.split(";");
+        // M, N; C; cgX, cgY ;
+        // I1X, I1Y, I2X, I2Y, ...IiX, IiY ;
+        // S1X, S1Y, S1Passengers, S2X, S2Y, S2Passengers, ...SjX, SjY, SjPassengers;
+        // splits = ["m,n", "c", "cgX,cgY", "I1X,I1Y", "S1X,S1Y,S1Passengers"]
+        int m = Integer.parseInt(splits[0].split(",")[0]);
+        int n = Integer.parseInt(splits[0].split(",")[1]);
+        int locX = Integer.parseInt(splits[2].split(",")[0]);
+        int locY = Integer.parseInt(splits[2].split(",")[1]);
+        //Object[][] grid = new Object[m][n];
+        // the agent
+        String agent = locX + "," + locY + "," + Integer.parseInt(splits[1]) + "," + Integer.parseInt(splits[1]); // agent = "locX,locY,capacity,availableSeats"
+        // stations
+        // occupiedCells = cells occupied by stations and cells
+        // HashMap <String, String> -> <Location, "Type (Station, Ship),numOfPassengers,wrecked(true/false),blackBoxDamage"
+        HashMap<String, String> occupiedCells = new HashMap<String, String>();
+
+        String[] stationsSplits = splits[3].split(",");
+        for (int i = 0; i < stationsSplits.length-1; i+=2){
+            locX = Integer.parseInt(""+stationsSplits[i]);
+            locY = Integer.parseInt(""+stationsSplits[i+1]);
+            String location = locX + "," + locY;
+            occupiedCells.put(location,"Station");
+
+        }
+        String[] shipSplits = splits[4].split(",");
+        for (int i = 0; i < shipSplits.length-2; i+=3){
+            locX = Integer.parseInt(""+shipSplits[i]);
+            locY = Integer.parseInt(""+shipSplits[i+1]);
+            int passengers = Integer.parseInt(""+shipSplits[i+2]);
+            System.out.println(passengers);
+            String location = locX + "," + locY;
+            occupiedCells.put(location, "Ship," + passengers + ",false,0,false"); // (Ship),numOfPassengers,wrecked(true/false),blackBoxDamage,blackBoxIsRetrieved"
+        }
+        SearchProblem2 solver = new SearchProblem2();
+        // Breadth-first Search
+        if (strategy.equals("BF")) {
+            Node2 root = new Node2(occupiedCells, agent, null, 0, 0, "", 0, 0, m, n);
+            Object[] sol = solver.bfs(root);
+            Node2 solution = (Node2) sol[0];
+            int expandedNodes = (Integer) sol[1];
+            if (solution == null)
+                s= "no sol"; // ?
+            else {
+                s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+            }
+        }
+
+        // Depth-first Search
+//        if (strategy.equals(("DF"))) {
+//            Node root = new Node(OccupiedCells, agent, null, 0, 0, "", 0, 0, m, n);
+//            Object[] sol = solver.dfs(root);
+//            Node solution = (Node) sol[0];
+//            int expandedNodes = (Integer) sol[1];
+//            if (solution == null)
+//                return ""; // ?
+//            else {
+//                return solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+//            }
+//        }
+        return s.substring(1);
+        //return s;
+
+    }
+
     public static void main (String[] args){
         String grid0 = "5,6;50;0,1;0,4,3,3;1,1,90;";
         String grid2 = "2,2;50;0,1;1,0;1,1,40";
         String grid3 = "2,1;50;0,0;0,0;1,0,40";
-        System.out.println(solve(grid2, "BF", false));
-//        HashMap<int[], Object> test = new HashMap<int[], Object>();
-//        int[] location={0,0};
-//        test.put(location,new Ship(0, 0, 20));
-//        int[] location2={3,4};
-//        test.put(location2,"station");
-//        System.out.println(test.get(location2) instanceof Ship );
-
-        // if key is not present in hashmap it returns null
-
-
-
+        System.out.println(solve2(grid0, "BF", false));
     }
 }
