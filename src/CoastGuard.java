@@ -8,32 +8,32 @@ public class CoastGuard {
         // Create grid with random dimensions
         int n = (int) (Math.random()*(15-5+1)+5);
         int m = (int) (Math.random()*(15-5+1)+5);
-        Object[][] grid = new Object[n][m];
+        Object[][] grid = new Object[m][n];
 
         // Create agent with random location and add to grid
-        int locX = (int) (Math.random()*((n-1)-0+1)+0);
-        int locY = (int) (Math.random()*((m-1)-0+1)+0);
+        int locX = (int) (Math.random()*((m-1)+1)+0);
+        int locY = (int) (Math.random()*((n-1)+1)+0);
         int capacity = (int) (Math.random()*(100-30+1)+30);
         Agent agent = new Agent(locX ,locY, capacity);
         grid[agent.locX][agent.locY] = agent;
 
         // Create ship with random location and add to grid cell if it's empty
-        locX = (int) (Math.random()*((n-1)+1));
-        locY = (int) (Math.random()*((m-1)+1));
+        locX = (int) (Math.random()*((m-1)+1));
+        locY = (int) (Math.random()*((n-1)+1));
         int numOfPassengers = (int) (Math.random()*(100+1));
         while (grid[locX][locY] != null){
-            locX = (int) (Math.random()*((n-1)+1));
-            locY = (int) (Math.random()*((m-1)+1));
+            locX = (int) (Math.random()*((m-1)+1));
+            locY = (int) (Math.random()*((n-1)+1));
         }
         grid[locX][locY] = new Ship(locX, locY, numOfPassengers);
         ships += locX + "," + locY + "," + ((Ship)grid[locX][locY]).numOfPassengers;
 
         // Create station with random location and add to grid cell if it's empty
-        locX = (int) (Math.random()*((n-1)+1));
-        locY = (int) (Math.random()*((m-1)+1));
+        locX = (int) (Math.random()*((m-1)+1));
+        locY = (int) (Math.random()*((n-1)+1));
         while (grid[locX][locY] != null){
-            locX = (int) (Math.random()*((n-1)+1));
-            locY = (int) (Math.random()*((m-1)+1));
+            locX = (int) (Math.random()*((m-1)+1));
+            locY = (int) (Math.random()*((n-1)+1));
         }
         grid[locX][locY] = new Station(locX, locY);
         stations += locX + "," + locY;
@@ -42,8 +42,8 @@ public class CoastGuard {
         int numOfStations = 1;
 
         // Fill in other cells randomly with either ships, stations or nothing
-        for (int i = 0; i < n; i++){
-            for (int j = 0; j < m; j++){
+        for (int i = 0; i < m; i++){
+            for (int j = 0; j < n; j++){
                 int whichObject = (int) (Math.random()*(3));
                 if (whichObject == 0){
                     // empty cell
@@ -64,7 +64,7 @@ public class CoastGuard {
                 }
             }
         }
-        s += n + "," + m + ";" + agent.capacity + ";" + agent.locX + "," + agent.locY + ";" + stations + ";" + ships + ";";
+        s += m + "," + n + ";" + agent.capacity + ";" + agent.locX + "," + agent.locY + ";" + stations + ";" + ships + ";";
         return s;
     }
 
@@ -181,7 +181,7 @@ public class CoastGuard {
         SearchProblem2 solver = new SearchProblem2();
         // Breadth-first Search
         if (strategy.equals("BF")) {
-            Node2 root = new Node2(occupiedCells, null, 0, 0, "", 0, 0, m, n);
+            Node2 root = new Node2(occupiedCells, null, 0, 0, "", 0, 0, n, m);
             Object[] sol = solver.bfs(root);
             Node2 solution = (Node2) sol[0];
             int expandedNodes = (Integer) sol[1];
@@ -213,6 +213,6 @@ public class CoastGuard {
         String grid0 = "5,6;50;0,1;0,4,3,3;1,1,90;";
         String grid2 = "2,2;50;0,1;1,0;1,1,40";
         String grid3 = "2,1;50;0,0;0,0;1,0,40";
-        System.out.println(solve(grid0, "BF", false));
+        System.out.println(solve("8,5;60;4,6;2,7;3,4,37,3,5,93,4,0,40;", "BF", false));
     }
 }
