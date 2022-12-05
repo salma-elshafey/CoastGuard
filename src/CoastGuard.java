@@ -69,77 +69,77 @@ public class CoastGuard {
     }
 
     // Solve(grid,strategy, visualize)
-    public static String solve(String gr, String strategy, boolean visualize){
-        String s = "";
-
-        // recreate grid
-        String[] splits = gr.split(";");
-        // M, N; C; cgX, cgY ;
-        // I1X, I1Y, I2X, I2Y, ...IiX, IiY ;
-        // S1X, S1Y, S1Passengers, S2X, S2Y, S2Passengers, ...SjX, SjY, SjPassengers;
-        // splits = ["m,n", "c", "cgX,cgY", "I1X,I1Y", "S1X,S1Y,S1Passengers"]
-        int m = Integer.parseInt(splits[0].split(",")[0]);
-        int n = Integer.parseInt(splits[0].split(",")[1]);
-        int locX = Integer.parseInt(splits[2].split(",")[0]);
-        int locY = Integer.parseInt(splits[2].split(",")[1]);
-        //Object[][] grid = new Object[m][n];
-        // the agent
-        Agent agent = new Agent(locX, locY, Integer.parseInt(splits[1]));
-        // stations
-        // OccupiedCells= cells occupied by stations and cells
-        HashMap<String, Object> OccupiedCells = new HashMap<String, Object>();
-
-        String[] stationsSplits = splits[3].split(",");
-        for (int i = 0; i < stationsSplits.length-1; i+=2){
-            locX = Integer.parseInt(""+stationsSplits[i]);
-            locY = Integer.parseInt(""+stationsSplits[i+1]);
-            String location = locX + "," + locY;
-            //grid[locX][locY] = new Station(locX, locY);
-            OccupiedCells.put(location,"Station");
-
-        }
-        String[] shipSplits = splits[4].split(",");
-        for (int i = 0; i < shipSplits.length-2; i+=3){
-            locX = Integer.parseInt(""+shipSplits[i]);
-            locY = Integer.parseInt(""+shipSplits[i+1]);
-            int passengers = Integer.parseInt(""+shipSplits[i+2]);
-            System.out.println(passengers);
-            String location = locX + "," + locY;
-            // grid[locX][locY] = new Ship(locX, locY, passengers);
-            OccupiedCells.put(location,new Ship(locX, locY, passengers));
-        }
-        SearchProblem solver = new SearchProblem();
-        // Breadth-first Search
-        if (strategy.equals("BF")) {
-            Node root = new Node(OccupiedCells, agent, null, 0, 0, "", 0, 0, m, n);
-            Object[] sol = solver.bfs(root);
-            Node solution = (Node) sol[0];
-            int expandedNodes = (Integer) sol[1];
-            if (solution == null)
-                s= "no sol"; // ?
-            else {
-                s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
-            }
-        }
-
-        // Depth-first Search
-//        if (strategy.equals(("DF"))) {
+//    public static String solve(String gr, String strategy, boolean visualize){
+//        String s = "";
+//
+//        // recreate grid
+//        String[] splits = gr.split(";");
+//        // M, N; C; cgX, cgY ;
+//        // I1X, I1Y, I2X, I2Y, ...IiX, IiY ;
+//        // S1X, S1Y, S1Passengers, S2X, S2Y, S2Passengers, ...SjX, SjY, SjPassengers;
+//        // splits = ["m,n", "c", "cgX,cgY", "I1X,I1Y", "S1X,S1Y,S1Passengers"]
+//        int m = Integer.parseInt(splits[0].split(",")[0]);
+//        int n = Integer.parseInt(splits[0].split(",")[1]);
+//        int locX = Integer.parseInt(splits[2].split(",")[0]);
+//        int locY = Integer.parseInt(splits[2].split(",")[1]);
+//        //Object[][] grid = new Object[m][n];
+//        // the agent
+//        Agent agent = new Agent(locX, locY, Integer.parseInt(splits[1]));
+//        // stations
+//        // OccupiedCells= cells occupied by stations and cells
+//        HashMap<String, Object> OccupiedCells = new HashMap<String, Object>();
+//
+//        String[] stationsSplits = splits[3].split(",");
+//        for (int i = 0; i < stationsSplits.length-1; i+=2){
+//            locX = Integer.parseInt(""+stationsSplits[i]);
+//            locY = Integer.parseInt(""+stationsSplits[i+1]);
+//            String location = locX + "," + locY;
+//            //grid[locX][locY] = new Station(locX, locY);
+//            OccupiedCells.put(location,"Station");
+//
+//        }
+//        String[] shipSplits = splits[4].split(",");
+//        for (int i = 0; i < shipSplits.length-2; i+=3){
+//            locX = Integer.parseInt(""+shipSplits[i]);
+//            locY = Integer.parseInt(""+shipSplits[i+1]);
+//            int passengers = Integer.parseInt(""+shipSplits[i+2]);
+//            System.out.println(passengers);
+//            String location = locX + "," + locY;
+//            // grid[locX][locY] = new Ship(locX, locY, passengers);
+//            OccupiedCells.put(location,new Ship(locX, locY, passengers));
+//        }
+//        SearchProblem solver = new SearchProblem();
+//        // Breadth-first Search
+//        if (strategy.equals("BF")) {
 //            Node root = new Node(OccupiedCells, agent, null, 0, 0, "", 0, 0, m, n);
-//            Object[] sol = solver.dfs(root);
+//            Object[] sol = solver.bfs(root);
 //            Node solution = (Node) sol[0];
 //            int expandedNodes = (Integer) sol[1];
 //            if (solution == null)
-//                return ""; // ?
+//                s= "no sol"; // ?
 //            else {
-//                return solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+//                s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
 //            }
 //        }
-        return s.substring(1);
-        //return s;
+//
+//        // Depth-first Search
+////        if (strategy.equals(("DF"))) {
+////            Node root = new Node(OccupiedCells, agent, null, 0, 0, "", 0, 0, m, n);
+////            Object[] sol = solver.dfs(root);
+////            Node solution = (Node) sol[0];
+////            int expandedNodes = (Integer) sol[1];
+////            if (solution == null)
+////                return ""; // ?
+////            else {
+////                return solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+////            }
+////        }
+//        return s.substring(1);
+//        //return s;
+//
+//    }
 
-    }
-
-    public static String solve2(String gr, String strategy, boolean visualize) {
+    public static String solve(String gr, String strategy, boolean visualize) {
         String s = "";
 
         // recreate grid
@@ -213,6 +213,6 @@ public class CoastGuard {
         String grid0 = "5,6;50;0,1;0,4,3,3;1,1,90;";
         String grid2 = "2,2;50;0,1;1,0;1,1,40";
         String grid3 = "2,1;50;0,0;0,0;1,0,40";
-        System.out.println(solve2(grid2, "BF", false));
+        System.out.println(solve(grid0, "BF", false));
     }
 }
