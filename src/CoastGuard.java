@@ -159,6 +159,7 @@ public class CoastGuard {
         // occupiedCells = cells occupied by stations and cells
         // HashMap <String, String> -> <Location, "Type (Station, Ship),numOfPassengers,wrecked(true/false),blackBoxDamage"
         HashMap<String, String> occupiedCells = new HashMap<String, String>();
+        occupiedCells.put("Agent", agent);
 
         String[] stationsSplits = splits[3].split(",");
         for (int i = 0; i < stationsSplits.length-1; i+=2){
@@ -180,7 +181,7 @@ public class CoastGuard {
         SearchProblem2 solver = new SearchProblem2();
         // Breadth-first Search
         if (strategy.equals("BF")) {
-            Node2 root = new Node2(occupiedCells, agent, null, 0, 0, "", 0, 0, m, n);
+            Node2 root = new Node2(occupiedCells, null, 0, 0, "", 0, 0, m, n);
             Object[] sol = solver.bfs(root);
             Node2 solution = (Node2) sol[0];
             int expandedNodes = (Integer) sol[1];
@@ -212,6 +213,6 @@ public class CoastGuard {
         String grid0 = "5,6;50;0,1;0,4,3,3;1,1,90;";
         String grid2 = "2,2;50;0,1;1,0;1,1,40";
         String grid3 = "2,1;50;0,0;0,0;1,0,40";
-        System.out.println(solve2(grid0, "BF", false));
+        System.out.println(solve2(grid2, "BF", false));
     }
 }
