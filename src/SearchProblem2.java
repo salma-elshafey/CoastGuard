@@ -12,7 +12,7 @@ public class SearchProblem2 {
         }
         return false;
     }
-    // HashMap <String, String> -> <Location, "Type (Station, Ship),numOfPassengers,wrecked(true/false),blackBoxDamage,blackBoxIsRetrievable(true/false)"
+    // HashMap <String, String> -> <Location, "Type (Station, Ship),numOfPassengers,wrecked(true/false),blackBoxDamage,blackBoxIsRetrieved(true/false)"
     Object[] bfs (Node2 root) {
         Node2 goal;
         Queue<Node2> q = new LinkedList<Node2>();
@@ -100,7 +100,7 @@ public class SearchProblem2 {
                     // System.out.println(curr.occupiedCells.get(location) + ", Boat: " + location + ", Boat Available Seats: " + agentAvailableSeats);
                     if (currCell[0].equals("Ship")) {
                         int numOfPassengers = Integer.parseInt(currCell[1]);
-                        if (currCell[2].equals("true")) {
+                        if (currCell[2].equals("true")) { // ship is a wreck
                             if (currCell[4].equals("false")) { // here the agent can retrieve the black box of the wreck
                                 HashMap<String, String> occupiedCellsClone = curr.cloneOccupiedCells();
                                 occupiedCellsClone.put(location, "Ship," + numOfPassengers + ",true," + currCell[3] + ",true");
@@ -165,12 +165,15 @@ public class SearchProblem2 {
                 if (move) {
                     // enqueue nodes that contain "up" | "down" | "left" | "right" actions
                     String latestAction = "";
+                    String secondToLatestAction = "";
                     if (curr.parent != null) {
                         String[] s = curr.operator.split(",");
                         latestAction = s[s.length - 1];
+                        if (s.length >= 2 && (latestAction.equals("up") || latestAction.equals("down") || latestAction.equals("left") || latestAction.equals("right")))
+                            secondToLatestAction = s[s.length - 2];
                     }
-                    System.out.println("Latest action: " + curr.operator);
-                    boolean[] directions = leaveCell(agentLocX, agentLocY, rows, cols, latestAction);
+                   // System.out.println("Latest action: " + curr.operator);
+                    boolean[] directions = leaveCell(agentLocX, agentLocY, rows, cols, latestAction, secondToLatestAction);
                     // direction: 0: up, 1: down, 2: left, 3: right
                     if (directions[0]) { // up
                         HashMap<String, String> occupiedCellsClone = curr.cloneOccupiedCells();
@@ -247,7 +250,7 @@ public class SearchProblem2 {
         return false;
     }
 
-    boolean[] leaveCell(int locX, int locY, int rows, int columns, String latestAction){
+    boolean[] leaveCell(int locX, int locY, int rows, int columns, String latestAction, String secondToLatestAction){
         boolean[] directions = new boolean[4]; // up, down, left, right
         if (locY == 0) { // left of the grid
             if (locX == 0) // left upper corner -> can't go left or up
@@ -305,16 +308,15 @@ public class SearchProblem2 {
             directions[3] = true; // right
         }
         // if the previous actions was in the opposite direction, don't go
-        if (latestAction.equals("down"))
+        if (latestAction.equals("down") || secondToLatestAction.equals("down"))
             directions[0] = false; // up
-        else if (latestAction.equals("up"))
+        else if (latestAction.equals("up") || secondToLatestAction.equals("up"))
             directions[1] = false; // down
-        else if (latestAction.equals("right"))
+        else if (latestAction.equals("right") || secondToLatestAction.equals("right"))
             directions[2] = false; // left
-        else if (latestAction.equals("left"))
+        else if (latestAction.equals("left") || secondToLatestAction.equals("left"))
             directions[3] = false; // right
         return directions;
     }
-
 
 }
