@@ -30,7 +30,7 @@ public class SearchProblem2 {
             Node2 curr = q.poll();
             int retrievedBlackBoxes = curr.retrievedBoxes;
             String currAgent = curr.occupiedCells.get("Agent");
-            System.out.println("Depth: " + curr.depth);
+            // System.out.println("Depth: " + curr.depth);
             if (curr.depth == depth + 2)
                 depth++;
             if (curr.depth == depth + 1){
@@ -71,7 +71,7 @@ public class SearchProblem2 {
                             unWreckedShips++;
                 }
             }
-            System.out.println(curr.occupiedCells);
+            // System.out.println(curr.occupiedCells);
             expandedNodes++;
             // check if curr is goal state
             if (reachedGoal(curr.occupiedCells, currAgent))
@@ -308,15 +308,20 @@ public class SearchProblem2 {
             directions[3] = true; // right
         }
         // if the previous actions was in the opposite direction, don't go
-        if (latestAction.equals("down") || secondToLatestAction.equals("down"))
+        if (latestAction.equals("down") ||
+                (secondToLatestAction.equals("down") && (latestAction.equals("left") || latestAction.equals("right"))))
             directions[0] = false; // up
-        else if (latestAction.equals("up") || secondToLatestAction.equals("up"))
+        else if (latestAction.equals("up") ||
+                (secondToLatestAction.equals("up") && (latestAction.equals("left") || latestAction.equals("right"))))
             directions[1] = false; // down
-        else if (latestAction.equals("right") || secondToLatestAction.equals("right"))
+        if (latestAction.equals("right") ||
+                (secondToLatestAction.equals("right") && (latestAction.equals("up") || latestAction.equals("down"))))
             directions[2] = false; // left
-        else if (latestAction.equals("left") || secondToLatestAction.equals("left"))
+        else if (latestAction.equals("left") ||
+                (secondToLatestAction.equals("left") && ((latestAction.equals("up") || latestAction.equals("down")))))
             directions[3] = false; // right
         return directions;
     }
+    // right,up,left
 
 }
