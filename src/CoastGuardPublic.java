@@ -2,7 +2,6 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;

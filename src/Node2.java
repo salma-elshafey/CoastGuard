@@ -17,13 +17,13 @@ public class Node2 implements Comparable<Node2> {
     //int heuristic;
     String pathCost;
 
-    public Node2(HashMap<String, String> occupiedCells, Node2 parent, int depth, String pathCost, String operator,
+    public Node2(HashMap<String, String> occupiedCells, Node2 parent, int depth,  String operator,
                  int retrievedBoxes, int deathsSoFar, int rows, int cols, int heuristic){
         // State is on the form <agent X location, agent Y location>
         this.occupiedCells = occupiedCells;
         this.parent = parent;
         this.depth = depth;
-        this.pathCost = deathsSoFar+","+numberOfLostBoxes();;
+        this.pathCost = deathsSoFar+","+numberOfLostBoxes();
         this.operator = operator;
         this.retrievedBoxes = retrievedBoxes;
         this.deathsSoFar = deathsSoFar;
@@ -32,7 +32,7 @@ public class Node2 implements Comparable<Node2> {
         this.heuristic=heuristic;
         this.heuristic1 = distance_to_theNearestShip();
     }
-    public Node2(HashMap<String, String> occupiedCells, Node2 parent, int depth, String pathCost, String operator,
+    public Node2(HashMap<String, String> occupiedCells, Node2 parent, int depth,  String operator,
                 int retrievedBoxes, int deathsSoFar){
         // State is on the form <agent X location, agent Y location>
         this.occupiedCells = occupiedCells;
@@ -61,7 +61,7 @@ public class Node2 implements Comparable<Node2> {
     public int getHeuristic_cost1() {
         String[] cost =pathCost.split(",");
         //   cost[0] = String.valueOf(Integer.parseInt(cost[0])+heuristic1);
-        return Integer.parseInt(cost[0])+heuristic1;
+        return Integer.parseInt(cost[0])+distance_to_theNearestShip();
     }
     public int getHeuristic_cost1_part2() {
         String[] cost =pathCost.split(",");
@@ -77,7 +77,7 @@ public class Node2 implements Comparable<Node2> {
     public int getHeuristic_cost2_part2() {
         String[] cost =pathCost.split(",");
         // cost[0] = String.valueOf(Integer.parseInt(cost[0])+heuristic2);
-        return Integer.parseInt(cost[0])+heuristic2;
+        return Integer.parseInt(cost[1]);
 
     }
 
@@ -101,7 +101,7 @@ public class Node2 implements Comparable<Node2> {
         //  <"Agent", "locX,locY,capacity,availableSeats">
         String agent = occupiedCells.get("Agent");
         String [] agentArr = agent.split(",");
-        int smallest_distance = rows*cols ;
+        int smallest_distance = 1000;
         int dis=0; // expected to die
         int small=0;
         int lostPassengers_inTheFuture=0; // used for the second heuristic function
@@ -113,6 +113,7 @@ public class Node2 implements Comparable<Node2> {
                 if ( isWreck.equals("false")) {
                     int shipX=Integer.parseInt(key.split(",")[0]);
                     int shipY=Integer.parseInt(key.split(",")[1]);
+                   // System.out.println("shipX: "+shipX+" shipY: "+shipY+" ");
                     dis = shipX-Integer.parseInt(agentArr[0]) + shipY-Integer.parseInt(agentArr[1]);
                     dis = Math.abs(dis);
 
@@ -136,7 +137,7 @@ public class Node2 implements Comparable<Node2> {
             }
         }
         heuristic2 = lostPassengers_inTheFuture;
-        return (smallest_distance==cols*rows)?0:smallest_distance;
+        return (smallest_distance==1000)?0:smallest_distance;
     }
 
 
@@ -190,6 +191,55 @@ public class Node2 implements Comparable<Node2> {
             }
             return lostPassengers_inTheFuture;
         }
+
+        if(o.heuristic ==11) {
+            int heu;
+            String agent = o.occupiedCells.get("Agent");
+            String[] agentArr = agent.split(",");
+            int smallest_distance = o.rows * o.cols;
+            int dis = 0; // expected to die
+            int small = 0;
+
+            for (String key : o.occupiedCells.keySet()) {
+                if (o.occupiedCells.get(key).split(",")[0].equals("Ship")) {
+                    String isWreck = o.occupiedCells.get(key).split(",")[2];
+                    int shipPassengers = Integer.parseInt(o.occupiedCells.get(key).split(",")[1]);
+                    if (isWreck.equals("false")) {
+                        int shipX = Integer.parseInt(key.split(",")[0]);
+                        int shipY = Integer.parseInt(key.split(",")[1]);
+                        dis = shipX - Integer.parseInt(agentArr[0]) + shipY - Integer.parseInt(agentArr[1]);
+                        dis = Math.abs(dis);
+
+                        if (dis < shipPassengers) {  // as maybe the number of passenger remaining in the nearst ship is less that the step
+                            // needed to go there
+                            small = dis;
+                        } else {
+                            small = shipPassengers;
+                        }
+
+                        if (small < smallest_distance) {
+                            smallest_distance = small;
+                        }
+
+                    }
+
+                }
+            }
+            //heuristic2 = lostPassengers_inTheFuture;
+            if(smallest_distance == o.cols * o.rows){ smallest_distance= 0; }
+            heu=smallest_distance+o.deathsSoFar;
+
+            return heu;
+        }
         return 0;
     }
+
+
+    @Override
+    public String toString() {
+        String[]s=this.operator.split(",");
+        String lastOp=s[s.length-1];
+        return "depth: "+this.depth + ", LastAction: "+lastOp+", heu " + getHeuristic_cost1() + "||";
+    }
+
 }

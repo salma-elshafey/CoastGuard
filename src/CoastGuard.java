@@ -181,7 +181,7 @@ public class CoastGuard {
         SearchProblem2 solver = new SearchProblem2();
         // Breadth-first Search
         if (strategy.equals("BF")) {
-            Node2 root = new Node2(occupiedCells, null, 0, "", "", 0, 0, n, m,0);
+            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m,0);
             Object[] sol = solver.bfs(root);
             Node2 solution = (Node2) sol[0];
             int expandedNodes = (Integer) sol[1];
@@ -192,7 +192,7 @@ public class CoastGuard {
             }
         }
         if (strategy.equals("GR1")) {
-            Node2 root = new Node2(occupiedCells, null, 0, "", "", 0, 0, n, m,1);
+            Node2 root = new Node2(occupiedCells, null, 0, "",  0, 0, n, m,1);
             Object[] sol = solver.Greedy1(root);
             Node2 solution = (Node2) sol[0];
             int expandedNodes = (Integer) sol[1];
@@ -203,7 +203,7 @@ public class CoastGuard {
             }
         }
         if (strategy.equals("GR2")) {
-            Node2 root = new Node2(occupiedCells, null, 0, "", "", 0, 0, n, m,2);
+            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m,2);
             Object[] sol = solver.Greedy1(root);
             Node2 solution = (Node2) sol[0];
             int expandedNodes = (Integer) sol[1];
@@ -215,8 +215,20 @@ public class CoastGuard {
         }
 
         if (strategy.equals("AS1")) {
-            Node2 root = new Node2(occupiedCells, null, 0, "", "", 0, 0, n, m,2);
+            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m,0);
             Object[] sol = solver.AS1(root);
+            Node2 solution = (Node2) sol[0];
+            int expandedNodes = (Integer) sol[1];
+            if (solution == null)
+                s= "no sol"; // ?
+            else {
+                s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+            }
+        }
+
+        if (strategy.equals("AS2")) {
+            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m,0);
+            Object[] sol = solver.AS2(root);
             Node2 solution = (Node2) sol[0];
             int expandedNodes = (Integer) sol[1];
             if (solution == null)
@@ -245,9 +257,19 @@ public class CoastGuard {
 
     public static void main (String[] args){
         String grid0 = "5,6;50;0,1;0,4,3,3;1,1,90;";
-        String grid2 = "2,2;50;0,1;1,0;1,1,40";
-        String grid3 = "2,1;50;0,0;0,0;1,0,40";
-        String grid4 = "8,5;60;4,6;2,7;3,4,37,3,5,93,4,0,40;";
-        System.out.println(solve(grid3, "AS1", false));
+  //      String grid2 = "2,2;50;0,1;1,0;1,1,40";
+//        String grid3 = "2,1;50;0,0;0,0;1,0,40";
+//        String grid4 = "8,5;60;4,6;2,7;3,4,37,3,5,93,4,0,40;";
+        String grid2 = "7,5;40;2,3;3,6;1,1,10,4,5,90;";
+        String grid3 = "8,5;60;4,6;2,7;3,4,37,3,5,93,4,0,40;";
+        String grid4 = "5,7;63;4,2;6,2,6,3;0,0,17,0,2,73,3,0,30;";
+        String grid5 = "5,5;69;3,3;0,0,0,1,1,0;0,3,78,1,2,2,1,3,14,4,4,9;";
+        String grid6 = "7,5;86;0,0;1,3,1,5,4,2;1,1,42,2,5,99,3,5,89;";
+        String grid7= "6,7;82;1,4;2,3;1,1,58,3,0,58,4,2,72;";
+        String grid8 = "6,6;74;1,1;0,3,1,0,2,0,2,4,4,0,4,2,5,0;0,0,78,3,3,5,4,3,40;";
+        String grid9 = "7,5;100;3,4;2,6,3,5;0,0,4,0,1,8,1,4,77,1,5,1,3,2,94,4,3,46;";
+        String grid10= "10,6;59;1,7;0,0,2,2,3,0,5,3;1,3,69,3,4,80,4,7,94,4,9,14,5,2,39;";
+        System.out.println(solve(grid9, "BF", false));
+       // System.out.println(solve(grid2, "GR1", false));
     }
 }
