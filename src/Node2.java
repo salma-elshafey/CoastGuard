@@ -11,7 +11,7 @@ public class Node2 implements Comparable<Node2> {
     int depth;
     int rows;
     int cols;
-    int heuristic1;
+    int heuristic1 ;
     int heuristic2;
     int heuristic=0;
     //int heuristic;
@@ -23,13 +23,14 @@ public class Node2 implements Comparable<Node2> {
         this.occupiedCells = occupiedCells;
         this.parent = parent;
         this.depth = depth;
-        this.pathCost = pathCost;
+        this.pathCost = deathsSoFar+","+numberOfLostBoxes();;
         this.operator = operator;
         this.retrievedBoxes = retrievedBoxes;
         this.deathsSoFar = deathsSoFar;
         this.rows=rows;
         this.cols=cols;
         this.heuristic=heuristic;
+        this.heuristic1 = distance_to_theNearestShip();
     }
     public Node2(HashMap<String, String> occupiedCells, Node2 parent, int depth, String pathCost, String operator,
                 int retrievedBoxes, int deathsSoFar){
@@ -37,10 +38,11 @@ public class Node2 implements Comparable<Node2> {
         this.occupiedCells = occupiedCells;
         this.parent = parent;
         this.depth = depth;
-        this.pathCost = pathCost;
+        this.pathCost = deathsSoFar+","+numberOfLostBoxes();
         this.operator = operator;
         this.retrievedBoxes = retrievedBoxes;
         this.deathsSoFar = deathsSoFar;
+        this.heuristic1 = distance_to_theNearestShip();
     }
     public HashMap<String, String> cloneOccupiedCells() {
         HashMap<String, String> output = new HashMap<String, String>();
@@ -64,7 +66,7 @@ public class Node2 implements Comparable<Node2> {
     public int getHeuristic_cost1_part2() {
         String[] cost =pathCost.split(",");
         //  cost[0] = String.valueOf(Integer.parseInt(cost[0])+heuristic1);
-        return Integer.parseInt(cost[0])+heuristic1;
+        return Integer.parseInt(cost[1]);
     }
     public int getHeuristic_cost2() {
         String[] cost =pathCost.split(",");
@@ -146,7 +148,6 @@ public class Node2 implements Comparable<Node2> {
             int smallest_distance = o.rows * o.cols;
             int dis = 0; // expected to die
             int small = 0;
-            int lostPassengers_inTheFuture = 0; // used for the second heuristic function
 
             for (String key : o.occupiedCells.keySet()) {
                 if (o.occupiedCells.get(key).split(",")[0].equals("Ship")) {
@@ -168,11 +169,8 @@ public class Node2 implements Comparable<Node2> {
                         if (small < smallest_distance) {
                             smallest_distance = small;
                         }
-                        lostPassengers_inTheFuture++;
-
 
                     }
-
 
                 }
             }
