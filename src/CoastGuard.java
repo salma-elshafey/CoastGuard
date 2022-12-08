@@ -181,7 +181,7 @@ public class CoastGuard {
         SearchProblem2 solver = new SearchProblem2();
         // Breadth-first Search
         if (strategy.equals("BF")) {
-            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m);
+            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m,0);
             Object[] sol = solver.bfs(root);
             Node2 solution = (Node2) sol[0];
             int expandedNodes = (Integer) sol[1];
@@ -192,7 +192,7 @@ public class CoastGuard {
             }
         }
         else if (strategy.equals("DF")) {
-            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m);
+            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m,0);
             Object[] sol = solver.dfs(root);
             Node2 solution = (Node2) sol[0];
             int expandedNodes = (Integer) sol[1];
@@ -203,7 +203,7 @@ public class CoastGuard {
             }
         }
         else if (strategy.equals("ID")) {
-            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m);
+            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m,0);
             Object[] sol = solver.ids(root);
             Node2 solution = (Node2) sol[0];
             int expandedNodes = (Integer) sol[1];
@@ -214,7 +214,7 @@ public class CoastGuard {
             }
         }
         else if (strategy.equals("UC")) {
-            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m);
+            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m,0);
             Object[] sol = solver.ucs(root);
             Node2 solution = (Node2) sol[0];
             int expandedNodes = (Integer) sol[1];
