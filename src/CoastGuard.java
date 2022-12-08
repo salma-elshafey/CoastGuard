@@ -224,6 +224,52 @@ public class CoastGuard {
                 s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
             }
         }
+        if (strategy.equals("GR1")) {
+            Node2 root = new Node2(occupiedCells, null, 0, "",  0, 0, n, m,1);
+            Object[] sol = solver.Greedy1(root);
+            Node2 solution = (Node2) sol[0];
+            int expandedNodes = (Integer) sol[1];
+            if (solution == null)
+                s= "no sol"; // ?
+            else {
+                s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+            }
+        }
+        if (strategy.equals("GR2")) {
+            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m,2);
+            Object[] sol = solver.Greedy1(root);
+            Node2 solution = (Node2) sol[0];
+            int expandedNodes = (Integer) sol[1];
+            if (solution == null)
+                s= "no sol"; // ?
+            else {
+                s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+            }
+        }
+
+        if (strategy.equals("AS1")) {
+            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m,0);
+            Object[] sol = solver.AS1(root);
+            Node2 solution = (Node2) sol[0];
+            int expandedNodes = (Integer) sol[1];
+            if (solution == null)
+                s= "no sol"; // ?
+            else {
+                s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+            }
+        }
+
+        if (strategy.equals("AS2")) {
+            Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m,0);
+            Object[] sol = solver.AS2(root);
+            Node2 solution = (Node2) sol[0];
+            int expandedNodes = (Integer) sol[1];
+            if (solution == null)
+                s= "no sol"; // ?
+            else {
+                s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+            }
+        }
         // Depth-first Search
 //        if (strategy.equals(("DF"))) {
 //            Node root = new Node(OccupiedCells, agent, null, 0, 0, "", 0, 0, m, n);
