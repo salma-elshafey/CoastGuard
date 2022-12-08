@@ -2,17 +2,16 @@ import java.util.*;
 
 public class SearchProblem2 {
 
-    public boolean includesState(ArrayList<HashMap<String, String>> states, HashMap<String, String> currentState) {
-        for (HashMap<String, String> state : states) {
-            if (state.equals(currentState))
+    public boolean includesState(HashMap<HashMap<String, String>, Boolean> states, HashMap<String, String> currentState) {
+        // if(states.get(currentState).equals(currentState))
+        if (states.containsKey(currentState))
                 return true;
-        }
         return false;
     }
     // HashMap <String, String> -> <Location, "Type (Station, Ship),numOfPassengers,wrecked(true/false),blackBoxDamage,blackBoxIsRetrieved(true/false)"
     Object[] bfs (Node2 root) {
         Queue<Node2> q = new LinkedList<Node2>();
-        ArrayList<HashMap<String, String>> states = new ArrayList<HashMap<String, String>>();
+        HashMap<HashMap<String, String>, Boolean> states = new HashMap<HashMap<String, String>, Boolean>();
         int rows = root.rows;
         int cols= root.cols;
         int expandedNodes = 0;
@@ -20,7 +19,7 @@ public class SearchProblem2 {
         q.add(root);
         int depth = root.depth; // 0
         HashMap<String, String> occupiedCells = root.occupiedCells;
-        states.add(root.occupiedCells);
+        states.put(root.occupiedCells, true);
         while (!q.isEmpty()) {
             int unWreckedShips = 0;
             Node2 curr = q.poll();
@@ -101,7 +100,7 @@ public class SearchProblem2 {
                                 occupiedCellsClone.put(location, "Ship," + numOfPassengers + ",true," + currCell[3] + ",true");
                                 if (!includesState(states, occupiedCellsClone)) {
                                     // System.out.println("RETRIEVE");
-                                    states.add(occupiedCellsClone);
+                                    states.put(occupiedCellsClone, true);
                                     q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                             ",retrieve", retrievedBlackBoxes + 1, curr.deathsSoFar + unWreckedShips));
                                     move = false;
@@ -119,7 +118,7 @@ public class SearchProblem2 {
                                         occupiedCellsClone.put("Agent", newAgent);
                                         if (!includesState(states, occupiedCellsClone)) {
                                             // System.out.println("PICKUP");
-                                            states.add(occupiedCellsClone);
+                                            states.put(occupiedCellsClone, true);
                                             q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                                     ",pickup", retrievedBlackBoxes, curr.deathsSoFar + unWreckedShips));
                                             move = false;
@@ -132,7 +131,7 @@ public class SearchProblem2 {
                                         occupiedCellsClone.put("Agent", newAgent);
                                         if (!includesState(states, occupiedCellsClone)) {
                                             // System.out.println("PICKUP");
-                                            states.add(occupiedCellsClone);
+                                            states.put(occupiedCellsClone, true);
                                             q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                                     ",pickup", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                                             move = false;
@@ -149,7 +148,7 @@ public class SearchProblem2 {
                             occupiedCellsClone.put("Agent", newAgent);
                             if (!includesState(states, occupiedCellsClone)) {
                                 // System.out.println("DROP");
-                                states.add(occupiedCellsClone);
+                                states.put(occupiedCellsClone, true);
                                 q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                         ",drop", retrievedBlackBoxes, curr.deathsSoFar + unWreckedShips));
                                 move = false;
@@ -182,7 +181,7 @@ public class SearchProblem2 {
                         occupiedCellsClone.put("Agent", currAgent);
                         if (!includesState(states, occupiedCellsClone)) {
                             // System.out.println("UP");
-                            states.add(occupiedCellsClone);
+                            states.put(occupiedCellsClone, true);
                             q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                     ",up", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                         }
@@ -193,7 +192,7 @@ public class SearchProblem2 {
                         occupiedCellsClone.put("Agent", currAgent);
                         if (!includesState(states, occupiedCellsClone)) {
                             // System.out.println("DOWN");
-                            states.add(occupiedCellsClone);
+                            states.put(occupiedCellsClone, true);
                             q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                     ",down", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                         }
@@ -204,7 +203,7 @@ public class SearchProblem2 {
                         occupiedCellsClone.put("Agent", currAgent);
                         if (!includesState(states, occupiedCellsClone)) {
                             // System.out.println("LEFT");
-                            states.add(occupiedCellsClone);
+                            states.put(occupiedCellsClone, true);
                             q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                     ",left", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                         }
@@ -215,7 +214,7 @@ public class SearchProblem2 {
                         occupiedCellsClone.put("Agent", currAgent);
                         if (!includesState(states, occupiedCellsClone)) {
                             // System.out.println("RIGHT");
-                            states.add(occupiedCellsClone);
+                            states.put(occupiedCellsClone, true);
                             q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                     ",right", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                         }
@@ -228,7 +227,7 @@ public class SearchProblem2 {
 
     Object[] dfs (Node2 root) {
         Stack<Node2> s = new Stack<Node2>();
-        ArrayList<HashMap<String, String>> states = new ArrayList<HashMap<String, String>>();
+        HashMap<HashMap<String, String>, Boolean> states = new HashMap<HashMap<String, String>, Boolean>();
         int rows = root.rows;
         int cols= root.cols;
         int expandedNodes = 0;
@@ -236,7 +235,7 @@ public class SearchProblem2 {
         s.push(root);
         int depth = root.depth; // 0
         HashMap<String, String> occupiedCells = root.occupiedCells;
-        states.add(root.occupiedCells);
+        states.put(root.occupiedCells, true);
         while (!s.isEmpty()) {
             int unWreckedShips = 0;
             Node2 curr = s.pop();
@@ -316,7 +315,7 @@ public class SearchProblem2 {
                                 occupiedCellsClone.put(location, "Ship," + numOfPassengers + ",true," + currCell[3] + ",true");
                                 if (!includesState(states, occupiedCellsClone)) {
                                     // System.out.println("RETRIEVE");
-                                    states.add(occupiedCellsClone);
+                                    states.put(occupiedCellsClone, true);
                                     s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                             ",retrieve", retrievedBlackBoxes + 1, curr.deathsSoFar + unWreckedShips));
                                     move = false;
@@ -334,7 +333,7 @@ public class SearchProblem2 {
                                         occupiedCellsClone.put("Agent", newAgent);
                                         if (!includesState(states, occupiedCellsClone)) {
                                             // System.out.println("PICKUP");
-                                            states.add(occupiedCellsClone);
+                                            states.put(occupiedCellsClone, true);
                                             s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                                     ",pickup", retrievedBlackBoxes, curr.deathsSoFar + unWreckedShips));
                                             move = false;
@@ -347,7 +346,7 @@ public class SearchProblem2 {
                                         occupiedCellsClone.put("Agent", newAgent);
                                         if (!includesState(states, occupiedCellsClone)) {
                                             // System.out.println("PICKUP");
-                                            states.add(occupiedCellsClone);
+                                            states.put(occupiedCellsClone, true);
                                             s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                                     ",pickup", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                                             move = false;
@@ -364,7 +363,7 @@ public class SearchProblem2 {
                             occupiedCellsClone.put("Agent", newAgent);
                             if (!includesState(states, occupiedCellsClone)) {
                                 // System.out.println("DROP");
-                                states.add(occupiedCellsClone);
+                                states.put(occupiedCellsClone, true);
                                 s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                         ",drop", retrievedBlackBoxes, curr.deathsSoFar + unWreckedShips));
                                 move = false;
@@ -397,7 +396,7 @@ public class SearchProblem2 {
                         occupiedCellsClone.put("Agent", currAgent);
                         if (!includesState(states, occupiedCellsClone)) {
                             // System.out.println("UP");
-                            states.add(occupiedCellsClone);
+                            states.put(occupiedCellsClone, true);
                             s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                     ",up", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                         }
@@ -408,7 +407,7 @@ public class SearchProblem2 {
                         occupiedCellsClone.put("Agent", currAgent);
                         if (!includesState(states, occupiedCellsClone)) {
                             // System.out.println("DOWN");
-                            states.add(occupiedCellsClone);
+                            states.put(occupiedCellsClone, true);
                             s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                     ",down", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                         }
@@ -419,7 +418,7 @@ public class SearchProblem2 {
                         occupiedCellsClone.put("Agent", currAgent);
                         if (!includesState(states, occupiedCellsClone)) {
                             // System.out.println("LEFT");
-                            states.add(occupiedCellsClone);
+                            states.put(occupiedCellsClone, true);
                             s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                     ",left", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                         }
@@ -430,7 +429,7 @@ public class SearchProblem2 {
                         occupiedCellsClone.put("Agent", currAgent);
                         if (!includesState(states, occupiedCellsClone)) {
                             // System.out.println("RIGHT");
-                            states.add(occupiedCellsClone);
+                            states.put(occupiedCellsClone, true);
                             s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                     ",right", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                         }
@@ -447,12 +446,12 @@ public class SearchProblem2 {
         int rows = root.rows;
         int cols = root.cols;
         int expandedNodes = 0;
-        for (iterativeDepth = 0; iterativeDepth < 150; iterativeDepth = (iterativeDepth + 1) ^ 50) {
+        for (iterativeDepth = 0; iterativeDepth < 4000; iterativeDepth+=15) {
             int depth = root.depth; // 0
             s.push(root);
             HashMap<String, String> occupiedCells = root.occupiedCells;
-            ArrayList<HashMap<String, String>> states = new ArrayList<HashMap<String, String>>();
-            states.add(root.occupiedCells);
+            HashMap<HashMap<String, String>, Boolean> states = new HashMap<HashMap<String, String>, Boolean>();
+            states.put(root.occupiedCells, true);
             while (!s.isEmpty()) {
                 int unWreckedShips = 0;
                 Node2 curr = s.pop();
@@ -532,7 +531,7 @@ public class SearchProblem2 {
                                     occupiedCellsClone.put(location, "Ship," + numOfPassengers + ",true," + currCell[3] + ",true");
                                     if (!includesState(states, occupiedCellsClone) && curr.depth < iterativeDepth) {
                                         // System.out.println("RETRIEVE");
-                                        states.add(occupiedCellsClone);
+                                        states.put(occupiedCellsClone, true);
                                         s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                                 ",retrieve", retrievedBlackBoxes + 1, curr.deathsSoFar + unWreckedShips));
                                         move = false;
@@ -550,7 +549,7 @@ public class SearchProblem2 {
                                             occupiedCellsClone.put("Agent", newAgent);
                                             if (!includesState(states, occupiedCellsClone) && curr.depth < iterativeDepth) {
                                                 // System.out.println("PICKUP");
-                                                states.add(occupiedCellsClone);
+                                                states.put(occupiedCellsClone, true);
                                                 s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                                         ",pickup", retrievedBlackBoxes, curr.deathsSoFar + unWreckedShips));
                                                 move = false;
@@ -563,7 +562,7 @@ public class SearchProblem2 {
                                             occupiedCellsClone.put("Agent", newAgent);
                                             if (!includesState(states, occupiedCellsClone) && curr.depth < iterativeDepth) {
                                                 // System.out.println("PICKUP");
-                                                states.add(occupiedCellsClone);
+                                                states.put(occupiedCellsClone, true);
                                                 s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                                         ",pickup", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                                                 move = false;
@@ -580,7 +579,7 @@ public class SearchProblem2 {
                                 occupiedCellsClone.put("Agent", newAgent);
                                 if (!includesState(states, occupiedCellsClone) && curr.depth < iterativeDepth) {
                                     // System.out.println("DROP");
-                                    states.add(occupiedCellsClone);
+                                    states.put(occupiedCellsClone, true);
                                     s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                             ",drop", retrievedBlackBoxes, curr.deathsSoFar + unWreckedShips));
                                     move = false;
@@ -613,7 +612,7 @@ public class SearchProblem2 {
                             occupiedCellsClone.put("Agent", currAgent);
                             if (!includesState(states, occupiedCellsClone) && curr.depth < iterativeDepth) {
                                 // System.out.println("UP");
-                                states.add(occupiedCellsClone);
+                                states.put(occupiedCellsClone, true);
                                 s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                         ",up", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                             }
@@ -624,7 +623,7 @@ public class SearchProblem2 {
                             occupiedCellsClone.put("Agent", currAgent);
                             if (!includesState(states, occupiedCellsClone) && curr.depth < iterativeDepth) {
                                 // System.out.println("DOWN");
-                                states.add(occupiedCellsClone);
+                                states.put(occupiedCellsClone, true);
                                 s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                         ",down", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                             }
@@ -635,7 +634,7 @@ public class SearchProblem2 {
                             occupiedCellsClone.put("Agent", currAgent);
                             if (!includesState(states, occupiedCellsClone) && curr.depth < iterativeDepth) {
                                 // System.out.println("LEFT");
-                                states.add(occupiedCellsClone);
+                                states.put(occupiedCellsClone, true);
                                 s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                         ",left", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                             }
@@ -646,7 +645,7 @@ public class SearchProblem2 {
                             occupiedCellsClone.put("Agent", currAgent);
                             if (!includesState(states, occupiedCellsClone) && curr.depth < iterativeDepth) {
                                 // System.out.println("RIGHT");
-                                states.add(occupiedCellsClone);
+                                states.put(occupiedCellsClone, true);
                                 s.push(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                         ",right", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                             }
@@ -661,7 +660,7 @@ public class SearchProblem2 {
     Object[] ucs (Node2 root) {
         Comparator<Node2> pathOrder = Comparator.comparing(Node2::getPathCost);
         PriorityQueue<Node2> q = new PriorityQueue<>(pathOrder);
-        ArrayList<HashMap<String, String>> states = new ArrayList<HashMap<String, String>>();
+        HashMap<HashMap<String, String>, Boolean> states = new HashMap<HashMap<String, String>, Boolean>();
         int rows = root.rows;
         int cols= root.cols;
         int expandedNodes = 0;
@@ -669,7 +668,7 @@ public class SearchProblem2 {
         q.add(root);
         int depth = root.depth; // 0
         HashMap<String, String> occupiedCells = root.occupiedCells;
-        states.add(root.occupiedCells);
+        states.put(root.occupiedCells, true);
         while (!q.isEmpty()) {
             int unWreckedShips = 0;
             Node2 curr = q.poll();
@@ -749,7 +748,7 @@ public class SearchProblem2 {
                                 occupiedCellsClone.put(location, "Ship," + numOfPassengers + ",true," + currCell[3] + ",true");
                                 if (!includesState(states, occupiedCellsClone)) {
                                     // System.out.println("RETRIEVE");
-                                    states.add(occupiedCellsClone);
+                                    states.put(occupiedCellsClone, true);
                                     q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                             ",retrieve", retrievedBlackBoxes + 1, curr.deathsSoFar + unWreckedShips));
                                     move = false;
@@ -767,7 +766,7 @@ public class SearchProblem2 {
                                         occupiedCellsClone.put("Agent", newAgent);
                                         if (!includesState(states, occupiedCellsClone)) {
                                             // System.out.println("PICKUP");
-                                            states.add(occupiedCellsClone);
+                                            states.put(occupiedCellsClone, true);
                                             q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                                     ",pickup", retrievedBlackBoxes, curr.deathsSoFar + unWreckedShips));
                                             move = false;
@@ -780,7 +779,7 @@ public class SearchProblem2 {
                                         occupiedCellsClone.put("Agent", newAgent);
                                         if (!includesState(states, occupiedCellsClone)) {
                                             // System.out.println("PICKUP");
-                                            states.add(occupiedCellsClone);
+                                            states.put(occupiedCellsClone, true);
                                             q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                                     ",pickup", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                                             move = false;
@@ -797,7 +796,7 @@ public class SearchProblem2 {
                             occupiedCellsClone.put("Agent", newAgent);
                             if (!includesState(states, occupiedCellsClone)) {
                                 // System.out.println("DROP");
-                                states.add(occupiedCellsClone);
+                                states.put(occupiedCellsClone, true);
                                 q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                         ",drop", retrievedBlackBoxes, curr.deathsSoFar + unWreckedShips));
                                 move = false;
@@ -830,7 +829,7 @@ public class SearchProblem2 {
                         occupiedCellsClone.put("Agent", currAgent);
                         if (!includesState(states, occupiedCellsClone)) {
                             // System.out.println("UP");
-                            states.add(occupiedCellsClone);
+                            states.put(occupiedCellsClone, true);
                             q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                     ",up", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                         }
@@ -841,7 +840,7 @@ public class SearchProblem2 {
                         occupiedCellsClone.put("Agent", currAgent);
                         if (!includesState(states, occupiedCellsClone)) {
                             // System.out.println("DOWN");
-                            states.add(occupiedCellsClone);
+                            states.put(occupiedCellsClone, true);
                             q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                     ",down", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                         }
@@ -852,7 +851,7 @@ public class SearchProblem2 {
                         occupiedCellsClone.put("Agent", currAgent);
                         if (!includesState(states, occupiedCellsClone)) {
                             // System.out.println("LEFT");
-                            states.add(occupiedCellsClone);
+                            states.put(occupiedCellsClone, true);
                             q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                     ",left", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                         }
@@ -863,7 +862,7 @@ public class SearchProblem2 {
                         occupiedCellsClone.put("Agent", currAgent);
                         if (!includesState(states, occupiedCellsClone)) {
                             // System.out.println("RIGHT");
-                            states.add(occupiedCellsClone);
+                            states.put(occupiedCellsClone, true);
                             q.add(new Node2(occupiedCellsClone, curr, curr.depth + 1, curr.operator +
                                     ",right", retrievedBlackBoxes, unWreckedShips > 0 ? (curr.deathsSoFar + unWreckedShips) : curr.deathsSoFar));
                         }

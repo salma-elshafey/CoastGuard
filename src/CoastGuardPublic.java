@@ -44,7 +44,7 @@ public class CoastGuardPublic {
 		String solution = CoastGuard.solve(grid2, "BF", false);
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid2, solution));
 	}
-	@Test(timeout = 10000)
+	@Test(timeout = 300000)
 	public void testa3() throws Exception {
 		String solution = CoastGuard.solve(grid3, "BF", false);
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid3, solution));
@@ -220,7 +220,7 @@ public class CoastGuardPublic {
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid1, solution));
 	}
 	
-	@Test(timeout = 10000)
+	@Test(timeout = 60000)
 	public void testd2() throws Exception {
 		String solution = CoastGuard.solve(grid2, "ID", false);
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid2, solution));
