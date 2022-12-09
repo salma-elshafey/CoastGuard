@@ -199,6 +199,9 @@ public class CoastGuard {
                 while (!(solution2.parent == null)) {
                     solution2 = solution2.parent;
                     System.out.println("Step: " + solution2.depth);
+                    System.out.println("ACTION  " + solution2.operator);
+                    System.out.println("STATE  " + solution2.occupiedCells);
+                    System.out.println();
                 }
             }
         }
@@ -221,6 +224,9 @@ public class CoastGuard {
                 while (!(solution2.parent == null)) {
                     solution2 = solution2.parent;
                     System.out.println("Step: " + solution2.depth);
+                    System.out.println("ACTION  " + solution2.operator);
+                    System.out.println("STATE  " + solution2.occupiedCells);
+                    System.out.println();
                 }
             }
         }
@@ -243,6 +249,9 @@ public class CoastGuard {
                 while (!(solution2.parent == null)) {
                     solution2 = solution2.parent;
                     System.out.println("Step: " + solution2.depth);
+                    System.out.println("ACTION  " + solution2.operator);
+                    System.out.println("STATE  " + solution2.occupiedCells);
+                    System.out.println();
                 }
             }
         }
@@ -265,6 +274,9 @@ public class CoastGuard {
                 while (!(solution2.parent == null)) {
                     solution2 = solution2.parent;
                     System.out.println("Step: " + solution2.depth);
+                    System.out.println("ACTION  " + solution2.operator);
+                    System.out.println("STATE  " + solution2.occupiedCells);
+                    System.out.println();
                 }
             }
         }
@@ -287,6 +299,9 @@ public class CoastGuard {
                 while (!(solution2.parent == null)) {
                     solution2 = solution2.parent;
                     System.out.println("Step: " + solution2.depth);
+                    System.out.println("ACTION  " + solution2.operator);
+                    System.out.println("STATE  " + solution2.occupiedCells);
+                    System.out.println();
                 }
             }
         }
@@ -309,6 +324,9 @@ public class CoastGuard {
                 while (!(solution2.parent == null)) {
                     solution2 = solution2.parent;
                     System.out.println("Step: " + solution2.depth);
+                    System.out.println("ACTION  " + solution2.operator);
+                    System.out.println("STATE  " + solution2.occupiedCells);
+                    System.out.println();
                 }
             }
         }
@@ -332,6 +350,9 @@ public class CoastGuard {
                 while (!(solution2.parent == null)) {
                     solution2 = solution2.parent;
                     System.out.println("Step: " + solution2.depth);
+                    System.out.println("ACTION  " + solution2.operator);
+                    System.out.println("STATE  " + solution2.occupiedCells);
+                    System.out.println();
                 }
             }
         }
@@ -355,6 +376,9 @@ public class CoastGuard {
                 while (!(solution2.parent == null)) {
                     solution2 = solution2.parent;
                     System.out.println("Step: " + solution2.depth);
+                    System.out.println("ACTION  " + solution2.operator);
+                    System.out.println("STATE  " + solution2.occupiedCells);
+                    System.out.println();
                 }
             }
         }
