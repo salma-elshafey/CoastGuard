@@ -1,6 +1,6 @@
 import java.util.HashMap;
 
-public class Node2 {
+public class Node2 implements Comparable<Node2> {
     HashMap<String, String> occupiedCells; // <Location, "Type (Station, Ship),numOfPassengers,wrecked(true/false),blackBoxDamage,blackBoxIsRetrievable(true/false)>"
     // OR <"Agent", "locX,locY,capacity,availableSeats">
     int retrievedBoxes; // part of state
@@ -234,7 +234,12 @@ public class Node2 {
         return 0;
     }
 
-
+    @Override
+    public String toString() {
+        String[]s=this.operator.split(",");
+        String lastOp=s[s.length-1];
+        return "depth: "+this.depth + ", LastAction: "+lastOp+", heu " + getHeuristic_cost1() + "||";
+    }
     public int getPathCost() {
         return Integer.parseInt(this.pathCost.split(",")[0]) + Integer.parseInt(this.pathCost.split(",")[1]);
     }
