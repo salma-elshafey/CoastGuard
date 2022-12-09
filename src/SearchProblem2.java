@@ -8,6 +8,13 @@ public class SearchProblem2 {
                 return true;
         return false;
     }
+    public boolean includesState(ArrayList<HashMap<String, String>> states, HashMap<String, String> currentState) {
+        for (HashMap<String, String> state : states) {
+            if (state.equals(currentState))
+                return true;
+        }
+        return false;
+    }
     // HashMap <String, String> -> <Location, "Type (Station, Ship),numOfPassengers,wrecked(true/false),blackBoxDamage,blackBoxIsRetrieved(true/false)"
     Object[] bfs (Node2 root) {
         Queue<Node2> q = new LinkedList<Node2>();
