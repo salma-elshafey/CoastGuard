@@ -1658,5 +1658,80 @@ public class SearchProblem2 {
         return directions;
     }
     // right,up,left
-
+    boolean[] leaveCell(int locX, int locY, int rows, int columns, String latestAction, String secondToLatestAction){
+        boolean[] directions = new boolean[4]; // up, down, left, right
+        if (locY == 0) { // left of the grid
+            if (locX == 0) // left upper corner -> can't go left or up
+            {
+                directions[1] = true; // down
+                directions[3] = true; // right
+            }
+            else if (locX == rows - 1) // left lower corner -> can't go left or down
+            {
+                directions[0] = true; // up
+                directions[3] = true; // right
+            }
+            else // agent can't go left only
+            {
+                directions[0] = true; // up
+                directions[1] = true; // down
+                directions[3] = true; // right
+            }
+        }
+        else if (locY == columns - 1) { // right of the grid
+            if (locX == 0) // right upper corner -> can't go right or up
+            {
+                directions[2] = true; // left
+                directions[1] = true; // down
+            }
+            else if (locX == rows - 1) // right lower corner -> can't go right or down
+            {
+                directions[0] = true; // up
+                directions[2] = true; // left
+            }
+            else // agent can't go right only
+            {
+                directions[0] = true; // up
+                directions[1] = true; // down
+                directions[2] = true; // left
+            }
+        }
+        else if (locX == 0) // can't go up
+        {
+            directions[1] = true; // down
+            directions[2] = true; // left
+            directions[3] = true; // right
+        }
+        else if (locX == rows - 1) // can't go down
+        {
+            directions[0] = true; // up
+            directions[2] = true; // left
+            directions[3] = true; // right
+        }
+        else
+        {
+            directions[0] = true; // up
+            directions[1] = true; // down
+            directions[2] = true; // left
+            directions[3] = true; // right
+        }
+        // if the previous actions was in the opposite direction, don't go
+        if (latestAction.equals("down")
+                || (secondToLatestAction.equals("down") && (latestAction.equals("left") || latestAction.equals("right")))
+        )
+            directions[0] = false; // up
+        else if (latestAction.equals("up")
+                || (secondToLatestAction.equals("up") && (latestAction.equals("left") || latestAction.equals("right")))
+        )
+            directions[1] = false; // down
+        if (latestAction.equals("right")
+                || (secondToLatestAction.equals("right") && (latestAction.equals("up") || latestAction.equals("down")))
+        )
+            directions[2] = false; // left
+        else if (latestAction.equals("left")
+                || (secondToLatestAction.equals("left") && ((latestAction.equals("up") || latestAction.equals("down"))))
+        )
+            directions[3] = false; // right
+        return directions;
+    }
 }

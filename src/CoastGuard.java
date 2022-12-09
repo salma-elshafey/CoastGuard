@@ -190,6 +190,17 @@ public class CoastGuard {
             else {
                 s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
             }
+            if(visualize == true) {
+                Node2 solution2 = (Node2) sol[0];
+                System.out.println("Step: " + solution2.depth);
+                System.out.println("ACTION  " + solution2.operator);
+                System.out.println("STATE  " + solution2.occupiedCells);
+                System.out.println();
+                while (!(solution2.parent == null)) {
+                    solution2 = solution2.parent;
+                    System.out.println("Step: " + solution2.depth);
+                }
+            }
         }
         else if (strategy.equals("DF")) {
             Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m,0);
@@ -200,6 +211,17 @@ public class CoastGuard {
                 s= "no sol"; // ?
             else {
                 s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+            }
+            if(visualize == true) {
+                Node2 solution2 = (Node2) sol[0];
+                System.out.println("Step: " + solution2.depth);
+                System.out.println("ACTION  " + solution2.operator);
+                System.out.println("STATE  " + solution2.occupiedCells);
+                System.out.println();
+                while (!(solution2.parent == null)) {
+                    solution2 = solution2.parent;
+                    System.out.println("Step: " + solution2.depth);
+                }
             }
         }
         else if (strategy.equals("ID")) {
@@ -212,6 +234,17 @@ public class CoastGuard {
             else {
                 s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
             }
+            if(visualize == true) {
+                Node2 solution2 = (Node2) sol[0];
+                System.out.println("Step: " + solution2.depth);
+                System.out.println("ACTION  " + solution2.operator);
+                System.out.println("STATE  " + solution2.occupiedCells);
+                System.out.println();
+                while (!(solution2.parent == null)) {
+                    solution2 = solution2.parent;
+                    System.out.println("Step: " + solution2.depth);
+                }
+            }
         }
         else if (strategy.equals("UC")) {
             Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m,0);
@@ -222,6 +255,17 @@ public class CoastGuard {
                 s= "no sol"; // ?
             else {
                 s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+            }
+            if(visualize == true) {
+                Node2 solution2 = (Node2) sol[0];
+                System.out.println("Step: " + solution2.depth);
+                System.out.println("ACTION  " + solution2.operator);
+                System.out.println("STATE  " + solution2.occupiedCells);
+                System.out.println();
+                while (!(solution2.parent == null)) {
+                    solution2 = solution2.parent;
+                    System.out.println("Step: " + solution2.depth);
+                }
             }
         }
         if (strategy.equals("GR1")) {
@@ -234,6 +278,17 @@ public class CoastGuard {
             else {
                 s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
             }
+            if(visualize == true) {
+                Node2 solution2 = (Node2) sol[0];
+                System.out.println("Step: " + solution2.depth);
+                System.out.println("ACTION  " + solution2.operator);
+                System.out.println("STATE  " + solution2.occupiedCells);
+                System.out.println();
+                while (!(solution2.parent == null)) {
+                    solution2 = solution2.parent;
+                    System.out.println("Step: " + solution2.depth);
+                }
+            }
         }
         if (strategy.equals("GR2")) {
             Node2 root = new Node2(occupiedCells, null, 0, "", 0, 0, n, m,2);
@@ -244,6 +299,17 @@ public class CoastGuard {
                 s= "no sol"; // ?
             else {
                 s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+            }
+            if(visualize == true) {
+                Node2 solution2 = (Node2) sol[0];
+                System.out.println("Step: " + solution2.depth);
+                System.out.println("ACTION  " + solution2.operator);
+                System.out.println("STATE  " + solution2.occupiedCells);
+                System.out.println();
+                while (!(solution2.parent == null)) {
+                    solution2 = solution2.parent;
+                    System.out.println("Step: " + solution2.depth);
+                }
             }
         }
 
@@ -257,6 +323,17 @@ public class CoastGuard {
             else {
                 s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
             }
+            if(visualize == true) {
+                Node2 solution2 = (Node2) sol[0];
+                System.out.println("Step: " + solution2.depth);
+                System.out.println("ACTION  " + solution2.operator);
+                System.out.println("STATE  " + solution2.occupiedCells);
+                System.out.println();
+                while (!(solution2.parent == null)) {
+                    solution2 = solution2.parent;
+                    System.out.println("Step: " + solution2.depth);
+                }
+            }
         }
 
         if (strategy.equals("AS2")) {
@@ -268,6 +345,17 @@ public class CoastGuard {
                 s= "no sol"; // ?
             else {
                 s= solution.operator + ";" + solution.deathsSoFar + ";" + solution.retrievedBoxes + ";" + expandedNodes;
+            }
+            if(visualize == true) {
+                Node2 solution2 = (Node2) sol[0];
+                System.out.println("Step: " + solution2.depth);
+                System.out.println("ACTION  " + solution2.operator);
+                System.out.println("STATE  " + solution2.occupiedCells);
+                System.out.println();
+                while (!(solution2.parent == null)) {
+                    solution2 = solution2.parent;
+                    System.out.println("Step: " + solution2.depth);
+                }
             }
         }
         // Depth-first Search
