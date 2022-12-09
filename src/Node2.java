@@ -141,7 +141,7 @@ public class Node2 {
     }
 
 
-
+    @Override
     public int compareTo(Node2 o) {
         if(o.heuristic ==1) {
             String agent = o.occupiedCells.get("Agent");
