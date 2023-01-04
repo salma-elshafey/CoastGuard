@@ -1,5 +1,5 @@
 # CoastGuard
-Artificial Intelligence Project 1
+Coast guard search problem using Java
 
 CoastGuard implements several seach algorithms to solve a problem using Java.
 
